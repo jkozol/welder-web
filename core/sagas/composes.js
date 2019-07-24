@@ -19,13 +19,15 @@ import {
   FETCHING_QUEUE,
   fetchingQueueSucceeded
 } from "../actions/composes";
+import { scheduleUpload } from "../actions/uploads";
 
 function* startCompose(action) {
   try {
-    const { blueprintName, composeType } = action.payload;
+    const { blueprintName, composeType, uploadSettings } = action.payload;
     const response = yield call(composer.startCompose, blueprintName, composeType);
     const statusResponse = yield call(composer.getComposeStatus, response.build_id);
     yield put(fetchingComposeSucceeded(statusResponse.uuids[0]));
+    yield put(scheduleUpload(statusResponse.uuids[0].id, uploadSettings));
     if (statusResponse.uuids[0].queue_status === "WAITING" || statusResponse.uuids[0].queue_status === "RUNNING") {
       yield* pollComposeStatus(statusResponse.uuids[0]);
     }

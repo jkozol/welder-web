@@ -44,6 +44,9 @@ const initialState = {
     fetchingComposes: true,
     errorState: null
   },
+  uploads: {
+    uploadList: []
+  },
   modals: {
     stopBuild: {
       composeId: "",

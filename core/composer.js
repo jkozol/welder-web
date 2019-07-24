@@ -211,3 +211,15 @@ export function getFailedComposes() {
 export function getComposeLog(uuid) {
   return get("/api/v0/compose/log/" + encodeURIComponent(uuid), { replyFormat: "raw" });
 }
+
+export function scheduleUpload(composeId, uploadSettings) {
+  return post("/api/v0/compose/uploads/schedule/" + encodeURIComponent(composeId), uploadSettings);
+}
+
+export function getUploadsInfo(composeId) {
+  return get("/api/v0/compose/uploads/info/" + encodeURIComponent(composeId));
+}
+
+export function getUploadInfo(uploadId) {
+  return get("/api/v0/upload/info/" + encodeURIComponent(uploadId));
+}
