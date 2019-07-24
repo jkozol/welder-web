@@ -1,4 +1,5 @@
 import cockpit from "cockpit";
+import providerSettings from "../data/providers";
 
 let cockpitHttp = cockpit.http("/run/weldr/api.socket", { superuser: "try" });
 
@@ -176,10 +177,11 @@ export function deleteSource(sourceName) {
   return _delete("/api/v0/projects/source/delete/" + encodeURIComponent(sourceName));
 }
 
-export function startCompose(blueprintName, composeType) {
+export function startCompose(blueprintName, composeType, uploadSettings) {
   return post("/api/v0/compose", {
     blueprint_name: blueprintName,
     compose_type: composeType,
+    settings: uploadSettings,
     branch: "master"
   });
 }
@@ -210,4 +212,8 @@ export function getFailedComposes() {
 
 export function getComposeLog(uuid) {
   return get("/api/v0/compose/log/" + encodeURIComponent(uuid), { replyFormat: "raw" });
+}
+
+export function getUploadProviders() {
+  return providerSettings;
 }
