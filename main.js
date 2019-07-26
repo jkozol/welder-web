@@ -6,6 +6,7 @@ import { addLocaleData, IntlProvider } from "react-intl";
 import enLocaleData from "react-intl/locale-data/en";
 import FastClick from "fastclick";
 import { Provider } from "react-redux";
+import "@patternfly/react-core/dist/styles/base.css";
 import "bootstrap";
 import cockpit from "cockpit";
 
