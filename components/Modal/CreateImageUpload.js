@@ -26,6 +26,7 @@ import BlueprintApi from "../../data/BlueprintApi";
 import { setBlueprint } from "../../core/actions/blueprints";
 import { fetchingQueue, clearQueue, startCompose, fetchingComposeTypes } from "../../core/actions/composes";
 
+// TODO Understand what these do
 const messages = defineMessages({
   infotip: {
     defaultMessage: "This process can take a while. " + "Images are built in the order they are started."
@@ -49,7 +50,7 @@ class CreateImageUpload extends React.Component {
       imageName: "",
       showUploadAWSStep: false,
       showReviewStep: false,
-      uploadTo: ["aws"]
+      uploadTo: []
     };
     this.handleCreateImage = this.handleCreateImage.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -79,8 +80,15 @@ class CreateImageUpload extends React.Component {
     this.props.clearQueue();
   }
 
+  // TODO I don't like our notifications
   setNotifications() {
     this.props.layout.setNotifications();
+  }
+
+  isPendingChange() {
+    return (
+      this.props.blueprint.workspacePendingChanges.length > 0 || this.props.blueprint.localPendingChanges.length > 0
+    );
   }
 
   toggleOpen() {
@@ -95,44 +103,14 @@ class CreateImageUpload extends React.Component {
     NotificationsApi.displayNotification(this.props.blueprint.name, "imageWaiting");
     if (this.setNotifications) this.setNotifications();
     if (this.handleStartCompose) this.handleStartCompose(this.props.blueprint.name, this.state.imageType);
+    this.toggleOpen();
   }
 
   handleChange(event) {
     this.setState({ imageType: event.target.value });
   }
 
-  handleNextStep(activeStep, callback) {
-    if (activeStep.name === "Image Type") {
-      if (this.state.uploadTo.length === 0) {
-        if (this.isPendingChange()) {
-          this.handleCommit();
-        } else {
-          this.handleCreateImage();
-        }
-      } else {
-        this.setState(
-          {
-            showUploadAWSStep: true,
-            showReviewStep: false
-          },
-          () => {
-            callback();
-          }
-        );
-      }
-    } else {
-      this.setState(
-        {
-          showUploadAWSStep: true,
-          showReviewStep: true
-        },
-        () => {
-          callback();
-        }
-      );
-    }
-  }
-
+  // TODO I want to use redux better
   handleCommit() {
     // clear existing notifications
     NotificationsApi.closeNotification(undefined, "committed");
@@ -159,11 +137,50 @@ class CreateImageUpload extends React.Component {
       .catch(e => console.log(`Error in blueprint commit: ${e}`));
   }
 
-  isPendingChange() {
-    return (
-      this.props.blueprint.workspacePendingChanges.length > 0 || this.props.blueprint.localPendingChanges.length > 0
-    );
+  handleNextStep(activeStep, callback) {
+    switch (activeStep.name) {
+      case "Image Type":
+        if (this.state.uploadTo.length === 0) {
+          if (this.isPendingChange()) {
+            this.handleCommit();
+          } else {
+            this.handleCreateImage();
+          }
+        } else {
+          this.setState(
+            {
+              showUploadAWSStep: true,
+              showReviewStep: false
+            },
+            () => {
+              callback();
+            }
+          );
+        }
+        break;
+      case "Upload to Amazon S3":
+        this.setState(
+          {
+            showUploadAWSStep: true,
+            showReviewStep: true
+          },
+          () => {
+            callback();
+          }
+        );
+        break;
+      case "Review":
+        if (this.isPendingChange()) {
+          this.handleCommit();
+        } else {
+          this.handleCreateImage();
+        }
+        break;
+      default:
+        console.log("This page doesn't exist");
+    }
   }
+
   render() {
     const { formatMessage } = this.props.intl;
     const { showUploadAWSStep, showReviewStep, imageName, imageType, isOpen, uploadTo } = this.state;
@@ -172,15 +189,10 @@ class CreateImageUpload extends React.Component {
       name: "Image Type",
       component: (
         <Form isHorizontal>
-          <FormGroup label="Blueprint" isRequired fieldId="horizontal-form-name">
+          <FormGroup label="Blueprint" fieldId="horizontal-form-name">
             <Text>{this.props.blueprint.name}</Text>
           </FormGroup>
-          <FormGroup
-            label="Image"
-            isRequired
-            fieldId="horizontal-form-name"
-            helperText="Please provide your image name"
-          >
+          <FormGroup label="Image" isRequired fieldId="horizontal-form-name">
             <TextInput
               value={imageName}
               isRequired
@@ -194,9 +206,10 @@ class CreateImageUpload extends React.Component {
           <FormGroup label="Type" fieldId="horizontal-form-title">
             <FormSelect
               value={imageType}
-              onChange={this.onChange}
+              isRequired
               id="horzontal-form-title"
               name="horizontal-form-title"
+              onChange={this.onChange}
             >
               <FormSelectOption isDisabled key="default" value="" label={formatMessage(messages.selectOne)} />
               {this.props.imageTypes.map(type => (
@@ -268,7 +281,7 @@ class CreateImageUpload extends React.Component {
 
     return (
       <React.Fragment>
-        <Button variant="primary" onClick={this.toggleOpen}>
+        <Button variant="secondary" onClick={this.toggleOpen}>
           Create Image
         </Button>
         {isOpen && (
@@ -354,37 +367,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(injectIntl(CreateImageUpload));
-
-{
-  /* {warningUnsaved ? (
-            this.state.imageType !== "" ? (
-              this.state.uploadToAWS ? (
-                <CreateImageUpload buttonMsg="Commit and Next" closeModal={this.props.close} isDisabled={false} />
-              ) : (
-                <button type="button" className="btn btn-primary" onClick={this.handleCommit}>
-                  <FormattedMessage defaultMessage="Commit and Create" />
-                </button>
-              )
-            ) : this.state.uploadToAWS ? (
-              <CreateImageUpload buttonMsg="Commit and Next" closeModal={this.props.close} isDisabled />
-            ) : (
-              <button type="button" className="btn btn-primary" disabled>
-                <FormattedMessage defaultMessage="Commit and Create" />
-              </button>
-            )
-          ) : this.state.imageType !== "" ? (
-            this.state.uploadToAWS ? (
-              <CreateImageUpload buttonMsg="Next" closeModal={this.props.close} isDisabled={false} />
-            ) : (
-              <button type="button" className="btn btn-primary" onClick={this.handleCommit}>
-                <FormattedMessage defaultMessage="Create" />
-              </button>
-            )
-          ) : this.state.uploadToAWS ? (
-            <CreateImageUpload buttonMsg="Next" closeModal={this.props.close} isDisabled />
-          ) : (
-            <button type="button" className="btn btn-primary" disabled>
-              <FormattedMessage defaultMessage="Create" />
-            </button>
-          )} */
-}

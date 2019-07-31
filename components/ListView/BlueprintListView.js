@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage } from "react-intl";
 import PropTypes from "prop-types";
 import Link from "../Link/Link";
-import CreateImage from "../Modal/CreateImage";
+import CreateImageUpload from "../Modal/CreateImageUpload";
 import DeleteBlueprint from "../Modal/DeleteBlueprint";
 import ExportBlueprint from "../Modal/ExportBlueprint";
 
@@ -21,7 +21,7 @@ class BlueprintListView extends React.PureComponent {
               <Link to={`/edit/${blueprint.name}`} className="btn btn-default">
                 <FormattedMessage defaultMessage="Edit Blueprint" />
               </Link>
-              <CreateImage blueprint={blueprint} layout={layout} />
+              <CreateImageUpload blueprint={blueprint} layout={layout} />
               <div className="dropdown pull-right dropdown-kebab-pf">
                 <button
                   className="btn btn-link dropdown-toggle"

@@ -11,7 +11,7 @@ import Layout from "../../components/Layout/Layout";
 import BlueprintContents from "../../components/ListView/BlueprintContents";
 import ComponentDetailsView from "../../components/ListView/ComponentDetailsView";
 import UserAccount from "../../components/Modal/UserAccount";
-import CreateImage from "../../components/Modal/CreateImage";
+import CreateImageUpload from "../../components/Modal/CreateImageUpload";
 import ExportBlueprint from "../../components/Modal/ExportBlueprint";
 import StopBuild from "../../components/Modal/StopBuild";
 import DeleteImage from "../../components/Modal/DeleteImage";
@@ -68,7 +68,6 @@ import {
   makeGetBlueprintComposes,
   makeGetSelectedDeps
 } from "../../core/selectors";
-import CreateImageUpload from "../../components/Modal/CreateImageUpload";
 
 const messages = defineMessages({
   blueprint: {
@@ -336,15 +335,12 @@ class BlueprintPage extends React.Component {
           <div className="cmpsr-header__actions">
             <ul className="list-inline">
               <li>
-                <CreateImageUpload blueprint={blueprint} />
-              </li>
-              <li>
                 <Link to={`/edit/${this.props.route.params.blueprint}`} className="btn btn-default">
                   <FormattedMessage defaultMessage="Edit Blueprint" />
                 </Link>
               </li>
               <li>
-                <CreateImage blueprint={blueprint} layout={this.layout} />
+                <CreateImageUpload blueprint={blueprint} layout={this.layout} />
               </li>
               <li>
                 <div className="dropdown dropdown-kebab-pf">
@@ -567,7 +563,7 @@ class BlueprintPage extends React.Component {
                   title={formatMessage(messages.noImagesTitle)}
                   message={formatMessage(messages.noImagesMessage)}
                 >
-                  <CreateImage blueprint={blueprint} layout={this.layout} />
+                  <CreateImageUpload blueprint={blueprint} layout={this.layout} />
                 </EmptyState>
               )) || (
                 <ListView className="cmpsr-images" stacked>
@@ -670,7 +666,7 @@ BlueprintPage.propTypes = {
     composeId: PropTypes.string,
     visible: PropTypes.bool
   }),
-  createImage: PropTypes.shape({
+  CreateImageUpload: PropTypes.shape({
     blueprint: PropTypes.object,
     visible: PropTypes.bool
   }),
@@ -730,7 +726,7 @@ BlueprintPage.defaultProps = {
   setBlueprintHostname: function() {},
   stopBuild: {},
   deleteImage: {},
-  createImage: {},
+  CreateImageUpload: {},
   userAccount: {},
   dependenciesSortSetValue: function() {},
   componentsSortSetValue: function() {},
