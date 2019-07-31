@@ -68,6 +68,7 @@ import {
   makeGetBlueprintComposes,
   makeGetSelectedDeps
 } from "../../core/selectors";
+import CreateImageUpload from "../../components/Modal/CreateImageUpload";
 
 const messages = defineMessages({
   blueprint: {
@@ -334,6 +335,9 @@ class BlueprintPage extends React.Component {
           </ol>
           <div className="cmpsr-header__actions">
             <ul className="list-inline">
+              <li>
+                <CreateImageUpload blueprint={blueprint} />
+              </li>
               <li>
                 <Link to={`/edit/${this.props.route.params.blueprint}`} className="btn btn-default">
                   <FormattedMessage defaultMessage="Edit Blueprint" />
