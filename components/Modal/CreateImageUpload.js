@@ -270,7 +270,7 @@ class CreateImageUploadModal extends React.Component {
             defaultMessage: `Upload to ${displayName}`
           })}
           id={`${provider}-checkbox`}
-          aria-labelledby="horizontal-form-checkbox"
+          aria-labelledby="provider-checkbox"
         />
       </FormGroup>
     );
@@ -355,9 +355,8 @@ class CreateImageUploadModal extends React.Component {
                 <TextInput
                   value={imageName}
                   type="text"
-                  id="horizontal-form-name"
-                  aria-describedby="horizontal-form-name"
-                  name="horizontal-form-name"
+                  id="image-name"
+                  aria-describedby="image-name"
                   onChange={() => this.setState({ imageName: event.target.value })}
                 />
               </FormGroup>
@@ -450,6 +449,7 @@ class CreateImageUploadModal extends React.Component {
             return (
               <React.Fragment>
                 <Button
+                  id="continue-button"
                   variant="primary"
                   isDisabled={imageType === ""}
                   onClick={() => this.handleNextStep(activeStep, onNext)}
@@ -475,7 +475,7 @@ class CreateImageUploadModal extends React.Component {
                 <Button variant="secondary" onClick={onBack} isDisabled={activeStep.name === "Image type"}>
                   <FormattedMessage defaultMessage="Back" />
                 </Button>
-                <Button variant="danger" onClick={onClose}>
+                <Button id="cancel-button" variant="danger" onClick={onClose}>
                   <FormattedMessage defaultMessage="Cancel" />
                 </Button>
               </React.Fragment>
@@ -488,6 +488,7 @@ class CreateImageUploadModal extends React.Component {
     return (
       <React.Fragment>
         <Wizard
+          id="create-image-wizard"
           isOpen={this.props.isOpen}
           isCompactNav
           onClose={this.props.close}
