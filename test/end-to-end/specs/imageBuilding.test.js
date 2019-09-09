@@ -106,13 +106,13 @@ describe("View Blueprint Page", function() {
     const jsonObj = JSON.parse(Buffer.from(jsonStr, "base64").toString("ascii"));
 
     // get blueprint info from API
-    const endpoint = `/api/v0/compose/status/*?blueprint=${name}`;
+    const endpoint = `/api/v1/compose/status/*?blueprint=${name}`;
     const result = commands.apiFetchTest(endpoint).value;
     // result looks like:
     // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L819
     const uuid = JSON.parse(result.data).uuids[0].id;
 
-    expect(jsonObj.path).to.equal(`/api/v0/compose/image/${uuid}`);
+    expect(jsonObj.path).to.equal(`/api/v1/compose/image/${uuid}`);
     expect(jsonObj.unix).to.equal("/run/weldr/api.socket");
   });
 

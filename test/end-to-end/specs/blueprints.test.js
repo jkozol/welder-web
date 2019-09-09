@@ -71,7 +71,7 @@ describe("Blueprints Page", function() {
     browser.waitForExist(exportPage.containerSelector, timeout, true);
 
     // get dependencies from API
-    const endpoint = `/api/v0/blueprints/depsolve/${name}`;
+    const endpoint = `/api/v1/blueprints/depsolve/${name}`;
     const result = commands.apiFetchTest(endpoint).value;
     // result looks like:
     // https://github.com/weldr/lorax/blob/db7b1e4fcd7c71d98ebdbf8335aa17e276d48e8e/src/pylorax/api/v0.py#L349

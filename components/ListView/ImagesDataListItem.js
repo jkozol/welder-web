@@ -27,28 +27,29 @@ import * as composer from "../../core/composer";
 class ImagesDataListItem extends React.Component {
   constructor() {
     super();
-    this.state = { logsExpanded: false, uploadsExpanded: false };
+    this.state = { composeLogExpanded: false, uploadsExpanded: false };
     this.handleDelete = this.handleDelete.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleShowModalStop = this.handleShowModalStop.bind(this);
     this.handleShowModalDeleteImage = this.handleShowModalDeleteImage.bind(this);
-    this.handleLogsShow = this.handleLogsShow.bind(this);
-    this.handleUploadsShow = this.handleUploadsShow.bind(this);
+    this.handleShowComposelog = this.handleShowComposelog.bind(this);
+    this.handleShowUploadLog = this.handleShowUploadLog.bind(this);
+    this.handleShowUploads = this.handleShowUploads.bind(this);
   }
 
   // maps to Remove button for FAILED
   handleDelete() {
-    this.props.deletingCompose(this.props.listItem.id);
+    this.props.deletingCompose(this.props.compose.id);
   }
 
   // maps to Stop button for WAITING
   handleCancel() {
-    this.props.cancellingCompose(this.props.listItem.id);
+    this.props.cancellingCompose(this.props.compose.id);
   }
 
   // maps to Stop button for RUNNING
   handleShowModalStop() {
-    this.props.setModalStopBuildState(this.props.listItem.id, this.props.blueprint);
+    this.props.setModalStopBuildState(this.props.compose.id, this.props.blueprint);
     this.props.setModalStopBuildVisible(true);
   }
 
@@ -56,110 +57,157 @@ class ImagesDataListItem extends React.Component {
   handleShowModalDeleteImage(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.setModalDeleteImageState(this.props.listItem.id, this.props.blueprint);
+    this.props.setModalDeleteImageState(this.props.compose.id, this.props.blueprint);
     this.props.setModalDeleteImageVisible(true);
   }
 
-  handleLogsShow() {
+  handleShowComposelog() {
     this.setState({ uploadsExpanded: false });
-    this.setState(prevState => ({ logsExpanded: !prevState.logsExpanded, fetchingLogs: !prevState.logsExpanded }));
-    composer.getComposeLog(this.props.listItem.id).then(
-      logs => {
-        this.setState({ logsContent: logs, fetchingLogs: false });
-      },
-      () => {
-        this.setState({
-          logsContent: <FormattedMessage defaultMessage="No log available" />,
-          fetchingLogs: false
-        });
-      }
-    );
+    this.setState(prevState => ({
+      composeLogExpanded: !prevState.composeLogExpanded,
+      uploadLogExpanded: false,
+      fetchinglog: !prevState.composeLogExpanded
+    }));
+    if (this.state.fetchinglog === true) {
+      composer.getComposeLog(this.props.compose.id).then(
+        log => {
+          this.setState({ logContent: log, fetchinglog: false });
+        },
+        () => {
+          this.setState({
+            logContent: <FormattedMessage defaultMessage="No log available" />,
+            fetchinglog: false
+          });
+        }
+      );
+    }
   }
-  handleUploadsShow() {
-    this.setState({ logsExpanded: false });
+
+  handleShowUploadLog() {
+    this.setState(prevState => ({
+      composeLogExpanded: false,
+      uploadLogExpanded: !prevState.uploadLogExpanded,
+      fetchinglog: !prevState.uploadLogExpanded
+    }));
+    if (this.state.fetchinglog === true) {
+      composer.getComposeLog(this.props.compose.id).then(
+        log => {
+          this.setState({ logContent: log, fetchinglog: false });
+        },
+        () => {
+          this.setState({
+            logContent: <FormattedMessage defaultMessage="No log available" />,
+            fetchinglog: false
+          });
+        }
+      );
+    }
+  }
+
+  handleShowUploads() {
+    this.setState({ uploadLogExpanded: false, composeLogExpanded: false });
     this.setState(prevState => ({ uploadsExpanded: !prevState.uploadsExpanded }));
   }
 
   render() {
-    const { listItem } = this.props;
-    const timestamp = new Date(listItem.job_created * 1000);
+    const { compose } = this.props;
+    const timestamp = new Date(compose.job_created * 1000);
     const formattedTime = timestamp.toDateString();
-    let status;
-    switch (listItem.queue_status) {
-      case "WAITING":
-        status = (
-          <>
-            <span className="pficon pficon-pending" aria-hidden="true" />
-            {` `}
-            <FormattedMessage defaultMessage="Image build pending" />
-          </>
-        );
-        break;
-      case "RUNNING":
-        status = (
-          <>
-            <span className="pficon pficon-in-progress" aria-hidden="true" />
-            {` `}
-            <FormattedMessage defaultMessage="Image build in progress" />
-          </>
-        );
-        break;
-      case "FINISHED":
-        status = (
-          <>
-            <span className="pficon pficon-ok" aria-hidden="true" />
-            {` `}
-            <FormattedMessage defaultMessage="Image build complete" />
-          </>
-        );
-        break;
-      case "FAILED":
-        status = (
-          <>
-            <span className="pficon pficon-error-circle-o" aria-hidden="true" />
-            {` `}
-            <FormattedMessage defaultMessage="Image build failed" />
-          </>
-        );
-        break;
-      default:
-        status = <p>other status</p>;
-    }
-    const logsButton = (
-      <Button variant={`${this.state.logsExpanded ? "primary" : "secondary"}`} onClick={this.handleLogsShow}>
-        <FormattedMessage defaultMessage="Logs" />
-      </Button>
-    );
-    let logsSection;
-    if (this.state.logsExpanded) {
-      if (this.state.fetchingLogs) {
-        logsSection = (
+
+    const composeStatus = () => {
+      switch (compose.queue_status) {
+        case "WAITING":
+          return (
+            <React.Fragment>
+              <span className="pficon pficon-pending" aria-hidden="true" />
+              {` `}
+              <FormattedMessage defaultMessage="Image build pending" />
+            </React.Fragment>
+          );
+        case "RUNNING":
+          return (
+            <React.Fragment>
+              <span className="pficon pficon-in-progress" aria-hidden="true" />
+              {` `}
+              <FormattedMessage defaultMessage="Image build in progress" />
+            </React.Fragment>
+          );
+        case "FINISHED":
+          return (
+            <React.Fragment>
+              <span className="pficon pficon-ok" aria-hidden="true" />
+              {` `}
+              <FormattedMessage defaultMessage="Image build complete" />
+            </React.Fragment>
+          );
+        case "FAILED":
+          return (
+            <React.Fragment>
+              <span className="pficon pficon-error-circle-o" aria-hidden="true" />
+              {` `}
+              <FormattedMessage defaultMessage="Image build failed" />
+            </React.Fragment>
+          );
+        default:
+          return <p>other status</p>;
+      }
+    };
+
+    let logSection;
+    if (this.state.uploadLogExpanded || this.state.composeLogExpanded) {
+      if (this.state.fetchinglog) {
+        logSection = (
           <div>
             <div className="spinner spinner-sm pull-left" aria-hidden="true" />
             <FormattedMessage defaultMessage="Loading log messages" />
           </div>
         );
-      } else logsSection = <pre className="pf-u-m-0">{this.state.logsContent}</pre>;
+      } else logSection = <pre className="pf-u-m-0">{this.state.logContent}</pre>;
     }
-    const actions = [
-      this.props.listItem.queue_status === "FINISHED" && (
-        <DropdownItem key="download" component="a" href={this.props.downloadUrl} download tabIndex="0">
-          <FormattedMessage defaultMessage="Download" />
-        </DropdownItem>
-      ),
-      this.props.listItem.queue_status === "FINISHED" && (
-        <button key="delete" className="pf-c-dropdown__menu-item" type="button">
-          Action
-        </button>
-      )
-    ];
+
+    const actions = () => {
+      switch (this.props.compose.queue_status) {
+        case "FINISHED":
+          return [
+            <li key="download">
+              <a href={this.props.downloadUrl} download>
+                <FormattedMessage defaultMessage="Download" />
+              </a>
+            </li>,
+            <li key="delete">
+              <button type="button" onClick={e => this.handleShowModalDeleteImage(e)}>
+                <FormattedMessage defaultMessage="Delete" />
+              </button>
+            </li>
+          ];
+        case "RUNNING":
+          return [
+            <li key="stop">
+              <a>
+                <FormattedMessage defaultMessage="Stop" />
+              </a>
+            </li>
+          ];
+        case "FAILED":
+          return [
+            <DropdownItem key="retry">
+              <a>
+                <FormattedMessage defaultMessage="retry" />
+              </a>
+            </DropdownItem>
+          ];
+        default:
+          break;
+      }
+    };
+
     return (
-      <DataListItem isExpanded={this.state.uploadsExpanded}>
+      <DataListItem aria-labelledby="Uploads" isExpanded={this.state.uploadsExpanded}>
         <DataListItemRow>
           <DataListToggle
-            onClick={this.handleUploadsShow}
+            onClick={this.handleShowUploads}
             isExpanded={this.state.uploadsExpanded}
-            id="ex-toggle1"
+            id="uploads-toggle"
             aria-controls="ex-expand1"
           />
           <div className="cc-c-data-list__item-icon">
@@ -168,43 +216,47 @@ class ImagesDataListItem extends React.Component {
           <DataListItemCells
             dataListCells={[
               <DataListCell key="blueprint">
-                <strong id="ex-item3a">
-                  {this.props.blueprint}-{listItem.version}-{listItem.compose_type}
+                <strong id="compose-name">
+                  {this.props.blueprint}-{compose.version}-{compose.compose_type}
                 </strong>
               </DataListCell>,
               <DataListCell key="type">
-                <span>Type</span> <strong>{listItem.compose_type}</strong>
+                <span>Type</span> <strong>{compose.compose_type}</strong>
               </DataListCell>,
               <DataListCell key="date">
                 <span>Created</span> <strong>{formattedTime}</strong>
               </DataListCell>
             ]}
           />
-          <div className="cc-c-data-list__item-status">{status}</div>
+          <div className="cc-c-data-list__item-status">{composeStatus()}</div>
           <div className="pf-c-data-list__item-action">
             <ActionsDropdown dropdownItems={actions} />
           </div>
           <div
-            aria-hidden={!this.props.listItem.queue_status === "WAITING"}
+            aria-hidden={!this.props.compose.queue_status === "WAITING"}
             className={`pf-c-data-list__item-action ${
-              this.props.listItem.queue_status === "WAITING" ? "cc-u-not-visible" : ""
+              this.props.compose.queue_status === "WAITING" ? "cc-u-not-visible" : ""
             }`}
           >
-            {logsButton}
+            <Button
+              variant={`${this.state.composeLogExpanded ? "primary" : "secondary"}`}
+              onClick={this.handleShowComposelog}
+            >
+              <FormattedMessage defaultMessage="Log" />
+            </Button>
           </div>
         </DataListItemRow>
-        <DataListContent aria-label="Uploads" id="ex-expand1" isHidden={!this.state.uploadsExpanded} noPadding>
-          <ImagesDataList listLevel="2" fullWidth>
-            <DataListItem>
+        <DataListContent aria-label="Uploads" id="uploads-expanded" isHidden={!this.state.uploadsExpanded} noPadding>
+          <ImagesDataList listLevel={2} fullWidth>
+            <DataListItem aria-labelledby="Log">
               <DataListItemRow>
-                <DataListToggle aria-hidden="true" />
                 <div className="cc-c-data-list__item-icon">
                   <ServiceIcon />
                 </div>
                 <DataListItemCells
                   dataListCells={[
                     <DataListCell key="blueprint">
-                      <strong id="ex-item3a">Type of upload</strong>
+                      <strong id="upload-type">Type of upload</strong>
                     </DataListCell>,
                     <DataListCell key="date">
                       <span>Started</span> <strong>{formattedTime}</strong>
@@ -216,26 +268,33 @@ class ImagesDataListItem extends React.Component {
                   {` `}
                   <FormattedMessage defaultMessage="Upload action complete" />
                 </div>
-                <div className="pf-c-data-list__item-action">
-                  <ActionsDropdown dropdownItems={actions} />
-                </div>
                 <div
-                  aria-hidden={!this.props.listItem.queue_status === "WAITING"}
+                  aria-hidden={!this.props.compose.queue_status === "WAITING"}
                   className={`pf-c-data-list__item-action ${
-                    this.props.listItem.queue_status === "WAITING" ? "cc-u-not-visible" : ""
+                    this.props.compose.queue_status === "WAITING" ? "cc-u-not-visible" : ""
                   }`}
                 >
-                  {logsButton}
+                  <Button
+                    variant={`${this.state.uploadLogExpanded ? "primary" : "secondary"}`}
+                    onClick={this.handleShowUploadLog}
+                  >
+                    <FormattedMessage defaultMessage="Log" />
+                  </Button>
                 </div>
               </DataListItemRow>
-              <DataListContent aria-label="Logs" id="ex-expand1" isHidden={!this.state.logsExpanded} noPadding>
-                {logsSection}
+              <DataListContent
+                aria-label="Log"
+                id="uploads-log-expanded"
+                isHidden={!this.state.uploadLogExpanded}
+                noPadding
+              >
+                {logSection}
               </DataListContent>
             </DataListItem>
           </ImagesDataList>
         </DataListContent>
-        <DataListContent aria-label="Logs" id="ex-expand1" isHidden={!this.state.logsExpanded} noPadding>
-          {logsSection}
+        <DataListContent aria-label="log" id="compose-log-expanded" isHidden={!this.state.composeLogExpanded} noPadding>
+          {logSection}
         </DataListContent>
       </DataListItem>
     );
@@ -243,7 +302,7 @@ class ImagesDataListItem extends React.Component {
 }
 
 ImagesDataListItem.propTypes = {
-  listItem: PropTypes.shape({
+  compose: PropTypes.shape({
     blueprint: PropTypes.string,
     compose_type: PropTypes.string,
     id: PropTypes.string,
@@ -265,7 +324,7 @@ ImagesDataListItem.propTypes = {
 };
 
 ImagesDataListItem.defaultProps = {
-  listItem: {},
+  compose: {},
   blueprint: "",
   deletingCompose: function() {},
   cancellingCompose: function() {},

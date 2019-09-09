@@ -274,7 +274,7 @@ class BlueprintPage extends React.Component {
         payload: "http-stream2",
         unix: "/run/weldr/api.socket",
         method: "GET",
-        path: `/api/v0/compose/image/${compose.id}`,
+        path: `/api/v1/compose/image/${compose.id}`,
         superuser: "try"
       })
     );
@@ -579,7 +579,7 @@ class BlueprintPage extends React.Component {
                     {composeList.map(compose => (
                       <ImagesDataListItem
                         blueprint={this.props.route.params.blueprint}
-                        listItem={compose}
+                        compose={compose}
                         downloadUrl={this.downloadUrl(compose)}
                         key={compose.id}
                       />

@@ -8,15 +8,10 @@ class ActionsDropdown extends React.Component {
     super(props);
     this.state = { isOpen: false };
     this.onToggle = this.onToggle.bind(this);
-    this.onSelect = this.onSelect.bind(this);
   }
 
   onToggle() {
     this.setState(prevState => ({ isOpen: !prevState.isOpen }));
-  }
-
-  onSelect(event) {
-    console.log(event);
   }
 
   render() {
@@ -31,7 +26,6 @@ class ActionsDropdown extends React.Component {
       <Dropdown
         id={this.props.id}
         className={this.props.className}
-        onSelect={this.onSelect}
         toggle={toggle}
         isOpen={this.state.isOpen}
         isPlain
