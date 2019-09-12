@@ -97,25 +97,13 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"]
-      },
-      {
-        test: /\.(svg|ttf|eot|woff|woff2)$/,
-        use: {
-          loader: "file-loader",
-          options: {
-            outputPath: "fonts",
-            name: "[name].[ext]"
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: { url: false }
           }
-        }
-      },
-      {
-        test: /\.(jpg|jpeg|png|gif)$/i,
-        loader: "url-loader",
-        options: {
-          outputPath: "images",
-          name: "[name].[ext]"
-        }
+        ]
       }
     ]
   }
