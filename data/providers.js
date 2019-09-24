@@ -1,4 +1,14 @@
 const providerSettings = {
+  aws: {
+    auth: {
+      aws_access_key: "AWS access key",
+      aws_secret_key: "AWS secret key"
+    },
+    settings: {
+      aws_region: "AWS region",
+      aws_bucket: "AWS bucket"
+    }
+  },
   azure: {
     auth: {
       client_id: "Client id",

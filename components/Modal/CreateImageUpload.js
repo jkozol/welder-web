@@ -87,6 +87,7 @@ class CreateImageUploadModal extends React.Component {
     this.state = {
       imageType: "",
       imageName: "",
+      showUploadAwsStep: false,
       showUploadAzureStep: false,
       showUploadOpenStackStep: false,
       showUploadVSphereStep: false,
@@ -134,6 +135,7 @@ class CreateImageUploadModal extends React.Component {
       imageName: "",
       uploadService: "",
       uploadSettings: {},
+      showUploadAwsStep: false,
       showUploadAzureStep: false,
       showUploadOpenStackStep: false,
       showUploadVSphereStep: false,
@@ -152,6 +154,7 @@ class CreateImageUploadModal extends React.Component {
     if (this.state.uploadService === uploadService) {
       this.setState({
         uploadService: "",
+        showUploadAwsStep: true,
         showUploadAzureStep: false,
         showUploadOpenStackStep: false,
         showUploadVSphereStep: false,
@@ -159,6 +162,13 @@ class CreateImageUploadModal extends React.Component {
       });
     } else {
       switch (uploadService) {
+        case "aws":
+          this.setState({
+            uploadService: uploadService,
+            showUploadAwsStep: true,
+            showReviewStep: true
+          });
+          break;
         case "azure":
           this.setState({
             uploadService: uploadService,
@@ -247,6 +257,7 @@ class CreateImageUploadModal extends React.Component {
     const { formatMessage } = this.props.intl;
     const { blueprint, imageTypes, providerSettings } = this.props;
     const {
+      showUploadAwsStep,
       showUploadAzureStep,
       showUploadOpenStackStep,
       showUploadVSphereStep,
@@ -307,6 +318,7 @@ class CreateImageUploadModal extends React.Component {
                 ))}
               </FormSelect>
             </FormGroup>
+            {imageType === "ami" && providerCheckbox("aws", "AWS")}
             {imageType === "vhd" && providerCheckbox("azure", "Azure")}
             {imageType === "openstack" && providerCheckbox("openstack", "OpenStack")}
             {imageType === "vmdk" && providerCheckbox("vsphere", "VSphere")}
@@ -436,6 +448,7 @@ class CreateImageUploadModal extends React.Component {
 
     const steps = [
       imageStep,
+      ...(showUploadAwsStep ? [uploadStep("aws", "AWS")] : []),
       ...(showUploadAzureStep ? [uploadStep("azure", "Azure")] : []),
       ...(showUploadOpenStackStep ? [uploadStep("openstack", "OpenStack")] : []),
       ...(showUploadVSphereStep ? [uploadStep("vsphere", "VSphere")] : []),
