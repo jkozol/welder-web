@@ -24,13 +24,13 @@ describe("lorax-composer api sanity test", function() {
     expect(status.value.trim()).to.equal("enabled");
   });
 
-  it("/api/v1/blueprints/list", function() {
-    const endpoint = "/api/v1/blueprints/list";
+  it("/api/v0/blueprints/list", function() {
+    const endpoint = "/api/v0/blueprints/list";
     const result = commands.apiFetchTest(endpoint).value;
     if (result.success) {
-      console.log(`API - "/api/v1/blueprints/list" response time: ${result.latency} millisecond`);
+      console.log(`API - "/api/v0/blueprints/list" response time: ${result.latency} millisecond`);
     } else {
-      console.log('Failed to access API - "/api/v1/blueprints/list" with error: ', result.data);
+      console.log('Failed to access API - "/api/v0/blueprints/list" with error: ', result.data);
     }
     expect(result.success).to.be.true;
     // there're 3 blueprints included in composer by default

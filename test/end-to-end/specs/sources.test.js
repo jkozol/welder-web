@@ -31,7 +31,7 @@ describe("Sources Page", function() {
 
     it("should have correct system source name", function() {
       // get system source list from API
-      const endpoint = "/api/v1/projects/source/list";
+      const endpoint = "/api/v0/projects/source/list";
       const result = commands.apiFetchTest(endpoint).value;
       // result looks like:
       // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L513
@@ -126,7 +126,7 @@ describe("Sources Page", function() {
 
       it("check source from API", function() {
         // get system source list from API
-        const endpoint = `/api/v1/projects/source/info/${repoName}`;
+        const endpoint = `/api/v0/projects/source/info/${repoName}`;
         const result = commands.apiFetchTest(endpoint).value;
         // result looks like:
         // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L529
@@ -147,7 +147,7 @@ describe("Sources Page", function() {
         sourcesPage.sourceName(repoName).waitForExist(timeout);
 
         // get system source list from API
-        const endpoint = `/api/v1/projects/source/info/${repoName}`;
+        const endpoint = `/api/v0/projects/source/info/${repoName}`;
         const result = commands.apiFetchTest(endpoint).value;
         // result looks like:
         // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L529

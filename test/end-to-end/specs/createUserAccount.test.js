@@ -94,7 +94,7 @@ describe("Create User Account Page", function() {
 
     it("should have the same password hash value", function() {
       // get blueprint info from API
-      const endpoint = `/api/v1/blueprints/info/${name}`;
+      const endpoint = `/api/v0/blueprints/info/${name}`;
       const result = commands.apiFetchTest(endpoint).value;
       // result looks like:
       // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L66
@@ -145,7 +145,7 @@ describe("Create User Account Page", function() {
       browser.waitForExist(createUserAccount.containerSelector, timeout, true);
 
       // get blueprint info from API
-      const endpoint = `/api/v1/blueprints/info/${name}`;
+      const endpoint = `/api/v0/blueprints/info/${name}`;
       const result = commands.apiFetchTest(endpoint).value;
       // result looks like:
       // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L66
@@ -175,7 +175,7 @@ describe("Create User Account Page", function() {
       browser.waitForExist(createUserAccount.containerSelector, timeout, true);
 
       // get blueprint info from API
-      const endpoint = `/api/v1/blueprints/info/${name}`;
+      const endpoint = `/api/v0/blueprints/info/${name}`;
       const result = commands.apiFetchTest(endpoint).value;
       // result looks like:
       // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L66
@@ -196,7 +196,7 @@ describe("Create User Account Page", function() {
       browser.waitForExist(createUserAccount.containerSelector, timeout, true);
 
       // get blueprint info from API
-      const endpoint = `/api/v1/blueprints/info/${name}`;
+      const endpoint = `/api/v0/blueprints/info/${name}`;
       const result = commands.apiFetchTest(endpoint).value;
       // result looks like:
       // https://github.com/weldr/lorax/blob/b57de934681056aa4f9bd480a34136cf340f510a/src/pylorax/api/v0.py#L66
