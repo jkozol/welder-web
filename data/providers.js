@@ -9,20 +9,6 @@ const providerSettings = {
       aws_bucket: "AWS bucket"
     }
   },
-  azure: {
-    auth: {
-      client_id: "Client id",
-      subscription_id: "Subscription id",
-      secret: "Secret",
-      tenant: "Tenant",
-      resource_group: "Resource group",
-      storage_account_name: "Storage account name"
-    },
-    settings: {
-      location: "Location",
-      storage_container: "Storage container"
-    }
-  },
   openstack: {
     auth: {
       username: "Username",
