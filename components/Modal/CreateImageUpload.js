@@ -90,6 +90,9 @@ class CreateImageUploadModal extends React.Component {
     this.state = {
       imageType: "",
       imageName: "",
+      imageSize: 2,
+      minImageSize: 2,
+      maxImageSize: 2000,
       showUploadAwsStep: false,
       showReviewStep: false,
       uploadService: "",
@@ -217,22 +220,23 @@ class CreateImageUploadModal extends React.Component {
         this.props.blueprint.name,
         this.state.imageType,
         this.state.imageName,
+        this.state.imageSize,
         this.state.uploadService,
         this.state.uploadSettings
       );
     this.props.close();
   }
 
-  handleStartCompose(blueprintName, composeType, imageName, uploadService, uploadSettings) {
+  handleStartCompose(blueprintName, composeType, imageName, imageSize, uploadService, uploadSettings) {
     const upload = {
       image_name: imageName,
       provider: uploadService,
       settings: uploadSettings
     };
     if (uploadService == "") {
-      this.props.startCompose(blueprintName, composeType);
+      this.props.startCompose(blueprintName, composeType, imageSize);
     } else {
-      this.props.startCompose(blueprintName, composeType, upload);
+      this.props.startCompose(blueprintName, composeType, imageSize, upload);
     }
   }
 
@@ -246,7 +250,16 @@ class CreateImageUploadModal extends React.Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { blueprint, imageTypes, providerSettings } = this.props;
-    const { showUploadAwsStep, showReviewStep, imageName, imageType, uploadService } = this.state;
+    const { 
+      showUploadAwsStep,
+      showReviewStep,
+      imageName,
+      imageType,
+      imageSize,
+      minImageSize,
+      maxImageSize,
+      uploadService 
+    } = this.state;
 
     const providerCheckbox = (provider, displayName) => (
       <FormGroup
@@ -300,6 +313,58 @@ class CreateImageUploadModal extends React.Component {
               </FormSelect>
             </FormGroup>
             {imageType === "ami" && providerCheckbox("aws", "AWS")}
+            <div className="pf-c-form__group">
+              <label className="pf-c-form__label" htmlFor="create-image-size">
+                <span className="pf-c-form__label-text"><FormattedMessage defaultMessage="Image size" /></span>
+                <span className="pf-c-form__label-required" aria-hidden="true"
+                  >&#42;</span
+                >
+              </label>
+              <div className="pf-c-form__horizontal-group">
+                <div className="pf-l-split pf-m-gutter">
+                  <div className="pf-l-split__item pf-m-fill">
+                    <input
+                      className="cc-c-form__range"
+                      type="range"
+                      id="create-image-size"
+                      name="size"
+                      min={minImageSize}
+                      max={maxImageSize}
+                      value={imageSize}
+                      onChange={e => this.setState({imageSize: e.target.value})}
+                      aria-describedby="create-image-size-help"
+                    />
+                    <div
+                      className="pf-l-split"
+                      id="create-image-size-help"
+                      aria-hidden="true"
+                    >
+                      <div className="pf-l-split__item pf-m-fill">
+                        {minImageSize} GB <span className="pf-u-screen-reader"><FormattedMessage defaultMessage="minimum" /></span>
+                      </div>
+                      <div className="pf-l-split__item">
+                        {maxImageSize} GB
+                        <span className="pf-u-screen-reader"
+                          ><FormattedMessage defaultMessage="maximum (see next action for more options)" /></span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <input
+                    className="pf-s-split__item pf-u-mr-xs"
+                    type="number"
+                    min={minImageSize}
+                    max={maxImageSize}
+                    value={imageSize}
+                    onChange={e => this.setState({imageSize: e.target.value})}
+                  />
+                  <div
+                    className="pf-s-split__item cc-c-form__static-text"
+                    aria-hidden="true"
+                  >GB</div>
+                </div>
+              </div>
+            </div>
           </Form>
         </React.Fragment>
       )
