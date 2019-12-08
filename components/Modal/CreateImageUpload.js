@@ -51,6 +51,14 @@ const messages = defineMessages({
   review: {
     defaultMessage:
       "Review the information below and click Finish to create the image and complete the tasks that were selected. "
+  },
+  warningSizeSmall: {
+    defaultMessage:
+      "Warning: The size specified is less than the smallest size possible. The smallest size possible will be used."
+  },
+  warningSizeLarge: {
+    defaultMessage:
+      "Warning: The size specified is large. We recommend that you check whether your target destination has any restrictions on image size." 
   }
 });
 
@@ -90,6 +98,9 @@ class CreateImageUploadModal extends React.Component {
     this.state = {
       imageType: "",
       imageName: "",
+      imageSize: 2,
+      minImageSize: 2,
+      maxImageSize: 2000,
       showUploadAwsStep: false,
       showReviewStep: false,
       uploadService: "",
@@ -217,22 +228,23 @@ class CreateImageUploadModal extends React.Component {
         this.props.blueprint.name,
         this.state.imageType,
         this.state.imageName,
+        this.state.imageSize,
         this.state.uploadService,
         this.state.uploadSettings
       );
     this.props.close();
   }
 
-  handleStartCompose(blueprintName, composeType, imageName, uploadService, uploadSettings) {
+  handleStartCompose(blueprintName, composeType, imageName, imageSize, uploadService, uploadSettings) {
     const upload = {
       image_name: imageName,
       provider: uploadService,
       settings: uploadSettings
     };
     if (uploadService == "") {
-      this.props.startCompose(blueprintName, composeType);
+      this.props.startCompose(blueprintName, composeType, imageSize);
     } else {
-      this.props.startCompose(blueprintName, composeType, upload);
+      this.props.startCompose(blueprintName, composeType, imageSize, upload);
     }
   }
 
@@ -246,7 +258,16 @@ class CreateImageUploadModal extends React.Component {
   render() {
     const { formatMessage } = this.props.intl;
     const { blueprint, imageTypes, providerSettings } = this.props;
-    const { showUploadAwsStep, showReviewStep, imageName, imageType, uploadService } = this.state;
+    const { 
+      showUploadAwsStep,
+      showReviewStep,
+      imageName,
+      imageType,
+      imageSize,
+      minImageSize,
+      maxImageSize,
+      uploadService 
+    } = this.state;
 
     const providerCheckbox = (provider, displayName) => (
       <FormGroup
@@ -300,6 +321,43 @@ class CreateImageUploadModal extends React.Component {
               </FormSelect>
             </FormGroup>
             {imageType === "ami" && providerCheckbox("aws", "AWS")}
+            <FormGroup label={formatMessage({ id: "image-size", defaultMessage: "Image size" })} isRequired fieldId="create-image-size">
+              <div className="pf-c-form__horizontal-group">
+                <div className="pf-l-split pf-m-gutter">
+                  <div className="pf-l-split__item pf-m-fill">
+                    <input
+                      className="pf-c-form-control"
+                      id="create-image-size"
+                      type="number"
+                      min={minImageSize}
+                      max={maxImageSize}
+                      value={imageSize}
+                      onChange={e => this.setState({imageSize: e.target.value})}
+                      aria-describedby="create-image-size-help"
+                    />
+                  </div>
+                  <div className="pf-l-split__item cc-c-form__static-text" aria-hidden="true">GB</div>
+                </div>
+                {imageSize < minImageSize && imageSize != 0 &&
+                <p
+                  className="pf-c-form__helper-text"
+                  id="help-text-simple-form-name-helper"
+                  aria-live="polite"
+                >
+                  {formatMessage(messages.warningSizeSmall)}
+                </p>
+                }
+                {imageSize > maxImageSize &&
+                <p
+                  className="pf-c-form__helper-text"
+                  id="help-text-simple-form-name-helper"
+                  aria-live="polite"
+                >
+                    {formatMessage(messages.warningSizeLarge)}
+                </p>
+                }
+              </div>
+            </FormGroup>
           </Form>
         </React.Fragment>
       )
