@@ -321,48 +321,18 @@ class CreateImageUploadModal extends React.Component {
                 >
               </label>
               <div className="pf-c-form__horizontal-group">
-                <div className="pf-l-split pf-m-gutter">
-                  <div className="pf-l-split__item pf-m-fill">
-                    <input
-                      className="cc-c-form__range"
-                      type="range"
-                      id="create-image-size"
-                      name="size"
-                      min={minImageSize}
-                      max={maxImageSize}
-                      value={imageSize}
-                      onChange={e => this.setState({imageSize: e.target.value})}
-                      aria-describedby="create-image-size-help"
-                    />
-                    <div
-                      className="pf-l-split"
-                      id="create-image-size-help"
-                      aria-hidden="true"
-                    >
-                      <div className="pf-l-split__item pf-m-fill">
-                        {minImageSize} GB <span className="pf-u-screen-reader"><FormattedMessage defaultMessage="minimum" /></span>
-                      </div>
-                      <div className="pf-l-split__item">
-                        {maxImageSize} GB
-                        <span className="pf-u-screen-reader"
-                          ><FormattedMessage defaultMessage="maximum (see next action for more options)" /></span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <input
-                    className="pf-s-split__item pf-u-mr-xs"
-                    type="number"
-                    min={minImageSize}
-                    max={maxImageSize}
-                    value={imageSize}
-                    onChange={e => this.setState({imageSize: e.target.value})}
-                  />
-                  <div
-                    className="pf-s-split__item cc-c-form__static-text"
-                    aria-hidden="true"
-                  >GB</div>
-                </div>
+                <input
+                  className="pf-s-split__item pf-u-mr-xs"
+                  type="number"
+                  min={minImageSize}
+                  max={maxImageSize}
+                  value={imageSize}
+                  onChange={e => this.setState({imageSize: e.target.value})}
+                />
+                <div
+                  className="pf-s-split__item cc-c-form__static-text"
+                  aria-hidden="true"
+                >GB</div>
               </div>
             </div>
           </Form>
