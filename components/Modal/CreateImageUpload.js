@@ -314,27 +314,40 @@ class CreateImageUploadModal extends React.Component {
             </FormGroup>
             {imageType === "ami" && providerCheckbox("aws", "AWS")}
             <div className="pf-c-form__group">
-              <label className="pf-c-form__label" htmlFor="create-image-size">
-                <span className="pf-c-form__label-text"><FormattedMessage defaultMessage="Image size" /></span>
-                <span className="pf-c-form__label-required" aria-hidden="true"
-                  >&#42;</span
-                >
-              </label>
+              <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-space-between">
+                <label className="pf-l-flex__item" htmlFor="create-image-size">
+                  <span className="pf-c-form__label-text"><FormattedMessage defaultMessage="Image size" /></span>
+                  <span className="pf-c-form__label-required" aria-hidden="true">&#42;</span>
+                </label>
+                <button className="pf-c-button pf-l-flex__item" type="button" aria-label="Image size help">
+                  <i className="fas fa-question-circle" aria-hidden="true" />
+                </button>
+              </div>
               <div className="pf-c-form__horizontal-group">
                 <div className="pf-l-split pf-m-gutter">
-                  <input
-                    className="pf-s-split__item pf-u-mr-xs"
-                    type="number"
-                    min={minImageSize}
-                    max={maxImageSize}
-                    value={imageSize}
-                    onChange={e => this.setState({imageSize: e.target.value})}
-                  />
-                  <div
-                    className="pf-s-split__item cc-c-form__static-text"
-                    aria-hidden="true"
-                  >GB</div>
+                  <div className="pf-l-split__item pf-m-fill">
+                    <input
+                      className="pf-c-form-control"
+                      id="create-image-size"
+                      type="number"
+                      min={minImageSize}
+                      max={maxImageSize}
+                      value={imageSize}
+                      onChange={e => this.setState({imageSize: e.target.value})}
+                      aria-describedby="create-image-size-help"
+                    />
+                  </div>
+                  <div className="pf-l-split__item cc-c-form__static-text pf-u-mr-md" aria-hidden="true">GB</div>
                 </div>
+                <p
+                  className="pf-c-form__helper-text"
+                  id="help-text-simple-form-name-helper"
+                  aria-live="polite"
+                >
+                  Warning: The value specified is large. We recommend that you
+                  check whether your target destination has any restrictions on
+                  image size.
+                </p>
               </div>
             </div>
           </Form>
