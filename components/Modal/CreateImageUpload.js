@@ -24,6 +24,7 @@ import { OutlinedQuestionCircleIcon, ExclamationTriangleIcon, ExclamationCircleI
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from "react-intl";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { UploadStepsAWS } from "UploadStepsAWS";
 import NotificationsApi from "../../data/NotificationsApi";
 import BlueprintApi from "../../data/BlueprintApi";
 import { setBlueprint } from "../../core/actions/blueprints";
@@ -618,7 +619,7 @@ class CreateImageUploadModal extends React.Component {
 
     const steps = [
       imageStep,
-      ...(showUploadAwsStep ? [uploadStep("aws", "AWS")] : []),
+      ...(showUploadAwsStep ? [UploadStepsAWS] : []),
       ...(showReviewStep ? [reviewStep] : [])
     ];
 
