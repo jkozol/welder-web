@@ -30,6 +30,9 @@ import { setBlueprint } from "../../core/actions/blueprints";
 import { fetchingQueue, clearQueue, startCompose, fetchingComposeTypes } from "../../core/actions/composes";
 import { fetchingUploadProviders } from "../../core/actions/uploads";
 
+// value={formatMessage(messages.accessKeyID, {
+//   link: <a href="https://console.aws.amazon.com/console/home">AWS Management Console</a>
+// })}
 const messages = defineMessages({
   imageSizePopover: {
     defaultMessage:
