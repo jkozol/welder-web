@@ -4,23 +4,23 @@ import {
     FormGroup,
     Text,
     TextInput  } from "@patternfly/react-core";
-import { defineMessages, FormattedMessage, injectIntl, intlShape } from "react-intl";
+import { defineMessages, formatMessage, FormattedMessage, injectIntl, intlShape } from "react-intl";
 
 const messages = defineMessages({
     accessKeyID: {
+        id: "access-key-id",
         defaultMessage: "AWS access key ID"
     },
     accessKeyIDHelp: {
-        defaultMessage: "Most of the values required to upload the image can be found in the <a>AWS Management Console</a>.",
-        values: {{
-            a: (...chunks) => (
-                <a className="external_link" href='https://www.patternfly.org/' target='_blank'>
-                  {chunks}
-                </a>
-            )
-        }}
+        id: "access-key-id-help",
+        defaultMessage: "Most of the values required to upload the image can be found in the {name}",
     },
     secretAccessKey: {
+        id: "secret-access-key",
+        defaultMessage: "AWS secret access key",
+    },
+    secretAccessKeyHelp: {
+        id: "secret-access-key-help",
         defaultMessage: "AWS secret access key",
     },
     region: {
@@ -47,41 +47,49 @@ class UploadStepsAWS extends React.Component {
                 </Text>
                 <Form isHorizontal>
                     <FormGroup
-                        label={formatMessage({
-                            id: `accessKeyID`,
-                            defaultMessage: accessKeyID
-                        })}
-                        fieldId={"accessKeyID"}
-                        key={"accessKeyID"}
+                        label={formatMessage(messages.accessKeyID)}
+                        fieldId="access-key-id"
+                        key="access-key-id"
                     >
                         <TextInput
-                        value={formatMessage({
-                            id: `accessKeyID`,
-                            defaultMessage: accessKeyID
+                        value={formatMessage(messages.accessKeyID, {
+                            name: 
                         })}
-                        type={providerSettings[provider].auth[key].isPassword ? "password" : "text"}
-                        id={key}
-                        key={key}
+                        type="password"
+                        id="access-key-id-help"
+                        key="access-key-id-help"
                         onChange={this.setUploadSettings}
                         isRequired
                         />
                     </FormGroup>
-
-
-
                     <FormGroup
-                        label={formatMessage({
-                        id: `aws-auth`,
-                        defaultMessage: providerSettings[provider].auth[key].displayText
-                        })}
-                        fieldId={key}
-                        key={key}
+                        label={formatMessage(messages.accessKeyID)}
+                        fieldId="access-key-id"
+                        key="access-key-id"
                     >
                         <TextInput
-                        value={this.state.uploadSettings[key] || ""}
-                        type={providerSettings[provider].auth[key].isPassword ? "password" : "text"}
-                        id={key}
-                        key={key}
+                        value={formatMessage(messages.accessKeyID, {
+                            link: <a href="https://console.aws.amazon.com/console/home">AWS Management Console</a>
+                        })}
+                        type="password"
+                        id="access-key-id-help"
+                        key="access-key-id-help"
+                        onChange={this.setUploadSettings}
+                        isRequired
+                        />
+                    </FormGroup>
+                    <FormGroup
+                        label={formatMessage(messages.accessKeyID)}
+                        fieldId="access-key-id"
+                        key="access-key-id"
+                    >
+                        <TextInput
+                        value={formatMessage(messages.accessKeyID, {
+                            link: <a href="https://console.aws.amazon.com/console/home">AWS Management Console</a>
+                        })}
+                        type="password"
+                        id="access-key-id-help"
+                        key="access-key-id-help"
                         onChange={this.setUploadSettings}
                         isRequired
                         />
