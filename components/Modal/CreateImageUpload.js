@@ -16,6 +16,8 @@ import {
   TextListItem,
   TextListItemVariants,
   Title,
+  Tooltip,
+  TooltipPosition,
   Wizard,
   WizardContextConsumer,
   WizardFooter
@@ -24,7 +26,7 @@ import { OutlinedQuestionCircleIcon, ExclamationTriangleIcon, ExclamationCircleI
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from "react-intl";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { UploadStepsAWS } from "UploadStepsAWS";
+// import UploadStepsAWS from "./UploadStepsAWS";
 import NotificationsApi from "../../data/NotificationsApi";
 import BlueprintApi from "../../data/BlueprintApi";
 import { setBlueprint } from "../../core/actions/blueprints";
@@ -76,6 +78,33 @@ const messages = defineMessages({
     defaultMessage: "A value is required."
   }
 });
+
+const awsMessages = defineMessages({
+  accessKeyID: {
+    id: "access-key-id",
+    defaultMessage: "AWS access key ID"
+  },
+  accessKeyIDHelp: {
+    id: "access-key-id-help",
+    defaultMessage:
+      "Most of the values required to upload the image can be found in the {name} page in the AWS console."
+  },
+  secretAccessKey: {
+    id: "secret-access-key",
+    defaultMessage: "AWS secret access key"
+  },
+  secretAccessKeyHelp: {
+    id: "secret-access-key-help",
+    defaultMessage:
+      "You can find the Secret access key only when you create a new Access key ID on the {name} page in the AWS console."
+  },
+  region: {
+    defaultMessage: "AWS region"
+  },
+  bucket: {
+    defaultMessage: "Amazon S3 bucket name"
+  }
+})
 
 class CreateImageUpload extends React.Component {
   constructor(props) {
@@ -446,88 +475,77 @@ class CreateImageUploadModal extends React.Component {
       )
     };
 
-    const uploadAuth = provider => ({
+    const awsUploadAuth = {
       name: "Authentication",
       component: (
         <React.Fragment>
           <Text className="help-block cc-c-form__required-text">
             <FormattedMessage defaultMessage="All fields are required." />
           </Text>
-          {providerSettings[provider] !== undefined && (
-            <Form isHorizontal>
-              {Object.keys(providerSettings[provider].auth).map(key => (
-                <FormGroup
-                  label={formatMessage({
-                    id: `${provider}-auth`,
-                    defaultMessage: providerSettings[provider].auth[key].displayText
-                  })}
-                  fieldId={key}
-                  key={key}
-                >
-                  <TextInput
-                    value={this.state.uploadSettings[key] || ""}
-                    type={providerSettings[provider].auth[key].isPassword ? "password" : "text"}
-                    id={key}
-                    key={key}
-                    onChange={this.setUploadSettings}
-                    isRequired
-                  />
-                </FormGroup>
-              ))}
-            </Form>
-          )}
+          <Form isHorizontal>
+            <FormGroup fieldId="access-key-id" key="access-key-id">
+              <Tooltip
+                position={TooltipPosition.top}
+                content={
+                  <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id feugiat augue, turpis.</div>
+                }
+              >
+                <OutlinedQuestionCircleIcon />
+              </Tooltip>
+              <TextInput
+                value={formatMessage(awsMessages.accessKeyID, {
+                  name: <b>Identity and Access Management (IAM)</b>
+                })}
+                type="password"
+                id="access-key-id-help"
+                key="access-key-id-help"
+                onChange={this.setUploadSettings}
+                isRequired
+              />
+            </FormGroup>
+          </Form>
         </React.Fragment>
       )
-    });
+    };
 
-    const uploadSettings = provider => ({
+    const awsUploadSettings = {
       name: "File upload",
       component: (
         <React.Fragment>
           <Text className="help-block cc-c-form__required-text">
             <FormattedMessage defaultMessage="All fields are required." />
           </Text>
-          {providerSettings[provider] !== undefined && (
-            <Form isHorizontal>
-              <FormGroup label={formatMessage({ id: "image-name", defaultMessage: "Image name" })} fieldId="image-name">
-                <TextInput
-                  value={imageName}
-                  type="text"
-                  id="image-name"
-                  aria-describedby="image-name"
-                  onChange={() => this.setState({ imageName: event.target.value })}
-                  isRequired
-                />
-              </FormGroup>
-              {Object.keys(providerSettings[provider].settings).map(key => (
-                <FormGroup
-                  label={formatMessage({
-                    id: `${provider}-settings`,
-                    defaultMessage: providerSettings[provider].settings[key].displayText
-                  })}
-                  fieldId={key}
-                  key={key}
-                >
-                  <TextInput
-                    value={this.state.uploadSettings[key] || ""}
-                    type={providerSettings[provider].settings[key].isPassword ? "password" : "text"}
-                    id={key}
-                    key={key}
-                    onChange={this.setUploadSettings}
-                    isRequired
-                  />
-                </FormGroup>
-              ))}
-            </Form>
-          )}
+          <Form isHorizontal>
+            <FormGroup fieldId="access-key-id" key="access-key-id">
+              <Tooltip
+                position={TooltipPosition.top}
+                content={
+                  <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id feugiat augue, turpis.</div>
+                }
+              >
+                <OutlinedQuestionCircleIcon />
+              </Tooltip>
+              <TextInput
+                value={formatMessage(awsMessages.accessKeyID, {
+                  name: <b>Identity and Access Management (IAM)</b>
+                })}
+                type="password"
+                id="access-key-id-help"
+                key="access-key-id-help"
+                onChange={this.setUploadSettings}
+                isRequired
+              />
+            </FormGroup>
+          </Form>
         </React.Fragment>
       )
-    });
+    };
 
-    const uploadStep = (provider, displayName) => ({
-      name: `Upload to ${displayName}`,
-      steps: [uploadAuth(provider), uploadSettings(provider)]
-    });
+
+    const uploadStep = {
+      name: `Upload to AWS`,
+      steps: [awsUploadAuth, awsUploadSettings]
+    };
 
     const reviewStep = {
       name: "Review",
@@ -617,11 +635,7 @@ class CreateImageUploadModal extends React.Component {
       )
     };
 
-    const steps = [
-      imageStep,
-      ...(showUploadAwsStep ? [UploadStepsAWS] : []),
-      ...(showReviewStep ? [reviewStep] : [])
-    ];
+    const steps = [imageStep, ...(showUploadAwsStep ? [uploadStep] : []), ...(showReviewStep ? [reviewStep] : [])];
 
     const createImageUploadFooter = (
       <WizardFooter>
