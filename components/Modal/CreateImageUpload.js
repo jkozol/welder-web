@@ -80,6 +80,19 @@ const messages = defineMessages({
 });
 
 const awsMessages = defineMessages({
+  awsHelpFirstParagraph: {
+    id: "aws-help-first",
+    defaultMessage:
+      "Image Builder can upload images you create to an S3 bucket in AWS and then import them into EC2. When the image build is complete " +
+      "and the upload action is successful, the image file is available in the AMI section of EC2. Most of the values required to upload " +
+      "the image can be found in the AWS Management Console."
+  },
+  awsHelpSecondParagraph: {
+    id: "aws-help-second",
+    defaultMessage:
+      "This upload process requires that you have an Identity and Access Management (IAM) role named vmimport to ensure that the image can " +
+      "be imported from the S3 bucket into EC2. For more details, refer to the AWS Required Service Role."
+  },
   accessKeyID: {
     id: "access-key-id",
     defaultMessage: "AWS access key ID"
@@ -104,7 +117,7 @@ const awsMessages = defineMessages({
   bucket: {
     defaultMessage: "Amazon S3 bucket name"
   }
-})
+});
 
 class CreateImageUpload extends React.Component {
   constructor(props) {
@@ -143,7 +156,7 @@ class CreateImageUploadModal extends React.Component {
       imageType: "",
       imageName: "",
       imageSize: "",
-      minImageSize: null,
+      minImageSize: 0,
       maxImageSize: 2000,
       showUploadAwsStep: false,
       showReviewStep: false,
@@ -344,23 +357,43 @@ class CreateImageUploadModal extends React.Component {
       uploadService
     } = this.state;
 
-    const providerCheckbox = (provider, displayName) => (
-      <FormGroup
-        label={this.props.intl.formatMessage({ id: `${provider}-form`, defaultMessage: "Upload image" })}
-        fieldId="provider-checkbox"
-      >
-        <Checkbox
-          value={provider}
-          isChecked={this.state.uploadService === provider}
-          onChange={this.handleUploadService}
-          label={this.props.intl.formatMessage({
-            id: `${provider}-checkbox`,
-            defaultMessage: `Upload to ${displayName}`
-          })}
-          id={`${provider}-checkbox`}
-          aria-labelledby="provider-checkbox"
-        />
-      </FormGroup>
+    const awsProviderCheckbox = (
+      <div className="pf-c-form__group">
+        <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
+          <label htmlFor="aws-checkbox" className="pf-l-flex__item">
+            <span className="pf-c-form__label-text">
+              <FormattedMessage defaultMessage="Upload image" />
+            </span>
+          </label>
+          <Popover
+            id="popover-help"
+            bodyContent={
+              <TextContent>
+                <p>{formatMessage(awsMessages.awsHelpFirstParagraph)}</p>
+                <p>{formatMessage(awsMessages.awsHelpSecondParagraph)}</p>
+              </TextContent>
+            }
+            aria-label="aws help"
+          >
+            <Button variant="plain" aria-label="aws help">
+              <OutlinedQuestionCircleIcon id="popover-icon" />
+            </Button>
+          </Popover>
+        </div>
+        <div className="pf-c-form__horizontal-group">
+          <Checkbox
+            value="aws"
+            isChecked={this.state.uploadService === "aws"}
+            onChange={this.handleUploadService}
+            label={this.props.intl.formatMessage({
+              id: `aws-checkbox`,
+              defaultMessage: `Upload to AWS`
+            })}
+            id="aws-checkbox"
+            aria-labelledby="provider-checkbox"
+          />
+        </div>
+      </div>
     );
 
     const imageStep = {
@@ -409,7 +442,7 @@ class CreateImageUploadModal extends React.Component {
                 ))}
               </FormSelect>
             </FormGroup>
-            {imageType === "ami" && providerCheckbox("aws", "AWS")}
+            {imageType === "ami" && awsProviderCheckbox}
             <div className="pf-c-form__group">
               <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
                 <label htmlFor="create-image-size" className="pf-l-flex__item">
@@ -486,16 +519,14 @@ class CreateImageUploadModal extends React.Component {
             <FormGroup fieldId="access-key-id" key="access-key-id">
               <Tooltip
                 position={TooltipPosition.top}
-                content={
-                  <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id feugiat augue, turpis.</div>
-                }
+                content={formatMessage(awsMessages.accessKeyIDHelp, {
+                  name: <strong>Identity and Access Management (IAM)</strong>
+                })}
               >
                 <OutlinedQuestionCircleIcon />
               </Tooltip>
               <TextInput
-                value={formatMessage(awsMessages.accessKeyID, {
-                  name: <b>Identity and Access Management (IAM)</b>
-                })}
+                value={formatMessage(awsMessages.accessKeyID)}
                 type="password"
                 id="access-key-id-help"
                 key="access-key-id-help"
@@ -540,7 +571,6 @@ class CreateImageUploadModal extends React.Component {
         </React.Fragment>
       )
     };
-
 
     const uploadStep = {
       name: `Upload to AWS`,
