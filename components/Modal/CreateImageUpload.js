@@ -102,6 +102,26 @@ const awsMessages = defineMessages({
     defaultMessage:
       "Most of the values required to upload the image can be found in the {name} page in the AWS console."
   },
+  bucket: {
+    id: "bucket",
+    defaultMessage: "Amazon S3 bucket"
+  },
+  bucketHelp: {
+    id: "bucket-help",
+    defaultMessage:
+      "Provide the S3 bucket name to which the image file will be uploaded before being imported into EC2. " +
+      "The bucket must already exist in the Region where you want to import your image. You can find a list of buckets on the " +
+      "S3 buckets page in the Amazon S3 storage service in the AWS console."
+  },
+  region: {
+    id: "region",
+    defaultMessage: "AWS region"
+  },
+  regionHelp: {
+    id: "region-help",
+    defaultMessage:
+      "Provide the AWS Region where you want to import your image. This must be the same region where the S3 bucket exists."
+  },
   secretAccessKey: {
     id: "secret-access-key",
     defaultMessage: "AWS secret access key"
@@ -109,13 +129,7 @@ const awsMessages = defineMessages({
   secretAccessKeyHelp: {
     id: "secret-access-key-help",
     defaultMessage:
-      "You can find the Secret access key only when you create a new Access key ID on the {name} page in the AWS console."
-  },
-  region: {
-    defaultMessage: "AWS region"
-  },
-  bucket: {
-    defaultMessage: "Amazon S3 bucket name"
+      "You can view the Secret access key only when you create a new Access key ID on the {name} page in the AWS console."
   }
 });
 
