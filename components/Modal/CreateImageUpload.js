@@ -284,6 +284,12 @@ class CreateImageUploadModal extends React.Component {
         case "aws":
           this.setState({
             uploadService: uploadService,
+            uploadSettings: {
+              accessKeyID: "",
+              secretAccessKey: "",
+              bucket: "",
+              region: ""
+            },
             showUploadAwsStep: true,
             showReviewStep: true
           });
@@ -642,6 +648,7 @@ class CreateImageUploadModal extends React.Component {
               <TextInput
                 className="pf-c-form-control"
                 value={this.state.uploadSettings["bucket"]}
+                type="text"
                 id="bucket-input"
                 name="bucket"
                 onChange={this.setUploadSettings}
@@ -672,6 +679,7 @@ class CreateImageUploadModal extends React.Component {
               <TextInput
                 className="pf-c-form-control"
                 value={this.state.uploadSettings["region"]}
+                type="text"
                 id="region-input"
                 name="region"
                 onChange={this.setUploadSettings}
