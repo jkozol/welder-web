@@ -180,6 +180,7 @@ class CreateImageUploadModal extends React.Component {
     this.missingRequiredFields = this.missingRequiredFields.bind(this);
     this.setNotifications = this.setNotifications.bind(this);
     this.setImageSize = this.setImageSize.bind(this);
+    this.setImageName = this.setImageName.bind(this);
     this.setImageType = this.setImageType.bind(this);
     this.setUploadSettings = this.setUploadSettings.bind(this);
     this.handleUploadService = this.handleUploadService.bind(this);
@@ -227,6 +228,12 @@ class CreateImageUploadModal extends React.Component {
     this.setState({
       imageSize: value
     });
+  }
+
+  setImageName(value) {
+    this.setState({
+      imageName: value
+    })
   }
 
   setImageType(imageType) {
@@ -619,6 +626,38 @@ class CreateImageUploadModal extends React.Component {
           <Form isHorizontal>
             <div className="pf-c-form__group">
               <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
+                <label htmlFor="image-name-input" className="pf-l-flex__item">
+                  <span className="pf-c-form__label-text">
+                    <FormattedMessage defaultMessage="Image name" />
+                  </span>
+                  <span className="pf-c-form__label-required" aria-hidden="true">
+                    &#42;
+                  </span>
+                </label>
+                <Popover
+                  id="popover-help"
+                  bodyContent={
+                    <React.Fragment>
+                      <FormattedMessage defaultMessage="Provide a file name to be used for the image file that will be uploaded." />
+                    </React.Fragment>
+                  }
+                  aria-label="image name help"
+                >
+                  <Button variant="plain" aria-label="image name help">
+                    <OutlinedQuestionCircleIcon id="popover-icon" />
+                  </Button>
+                </Popover>
+              </div>
+              <TextInput
+                className="pf-c-form-control"
+                value={imageName}
+                type="text"
+                id="image-name-input"
+                onChange={this.setImageName}
+              />
+            </div>
+            <div className="pf-c-form__group">
+              <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
                 <label htmlFor="bucket-input" className="pf-l-flex__item">
                   <span className="pf-c-form__label-text">
                     <FormattedMessage defaultMessage="Amazon S3 bucket" />
@@ -631,9 +670,11 @@ class CreateImageUploadModal extends React.Component {
                   id="bucket-popover"
                   bodyContent={
                     <React.Fragment>
-                      <FormattedMessage defaultMessage="
+                      <FormattedMessage
+                        defaultMessage="
                       Provide the S3 bucket name to which the image file will be uploaded before being imported into EC2. 
-                      The bucket must already exist in the Region where you want to import your image. You can find a list of buckets on the" />
+                      The bucket must already exist in the Region where you want to import your image. You can find a list of buckets on the"
+                      />
                       <strong> S3 buckets </strong>
                       <FormattedMessage defaultMessage="page in the Amazon S3 storage service in the AWS console." />
                     </React.Fragment>
