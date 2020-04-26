@@ -16,8 +16,6 @@ import {
   TextListItem,
   TextListItemVariants,
   Title,
-  Tooltip,
-  TooltipPosition,
   Wizard,
   WizardContextConsumer,
   WizardFooter
@@ -95,10 +93,9 @@ const awsMessages = defineMessages({
   },
   accessKeyID: {
     id: "access-key-id",
-    defaultMessage: "AWS access key ID"
+    defaultMessage: "Access key ID"
   },
   accessKeyIDHelp: {
-    id: "access-key-id-help",
     defaultMessage:
       "Most of the values required to upload the image can be found in the {name} page in the AWS console."
   },
@@ -111,7 +108,7 @@ const awsMessages = defineMessages({
     defaultMessage:
       "Provide the S3 bucket name to which the image file will be uploaded before being imported into EC2. " +
       "The bucket must already exist in the Region where you want to import your image. You can find a list of buckets on the " +
-      "S3 buckets page in the Amazon S3 storage service in the AWS console."
+      "{name} page in the Amazon S3 storage service in the AWS console."
   },
   region: {
     id: "region",
@@ -124,7 +121,7 @@ const awsMessages = defineMessages({
   },
   secretAccessKey: {
     id: "secret-access-key",
-    defaultMessage: "AWS secret access key"
+    defaultMessage: "Secret access key"
   },
   secretAccessKeyHelp: {
     id: "secret-access-key-help",
@@ -220,8 +217,9 @@ class CreateImageUploadModal extends React.Component {
     this.props.layout.setNotifications();
   }
 
-  setUploadSettings(value, event) {
-    const key = event.target.id;
+  setUploadSettings(_, event) {
+    const key = event.target.name;
+    const value = event.target.value;
     this.setState(prevState => ({ uploadSettings: Object.assign({}, prevState.uploadSettings, { [key]: value }) }));
   }
 
@@ -530,24 +528,76 @@ class CreateImageUploadModal extends React.Component {
             <FormattedMessage defaultMessage="All fields are required." />
           </Text>
           <Form isHorizontal>
-            <FormGroup fieldId="access-key-id" key="access-key-id">
-              <Tooltip
-                position={TooltipPosition.top}
-                content={formatMessage(awsMessages.accessKeyIDHelp, {
-                  name: <strong>Identity and Access Management (IAM)</strong>
-                })}
-              >
-                <OutlinedQuestionCircleIcon />
-              </Tooltip>
+            <div className="pf-c-form__group">
+              <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
+                <label htmlFor="access-key-id-input" className="pf-l-flex__item">
+                  <span className="pf-c-form__label-text">
+                    <FormattedMessage defaultMessage="Access key ID" />
+                  </span>
+                  <span className="pf-c-form__label-required" aria-hidden="true">
+                    &#42;
+                  </span>
+                </label>
+                <Popover
+                  id="popover-help"
+                  bodyContent={
+                    <React.Fragment>
+                      <FormattedMessage defaultMessage="Most of the values required to upload the image can be found in the" />
+                      <strong> Identity and Access Management (IAM) </strong>
+                      <FormattedMessage defaultMessage="page in the AWS console." />
+                    </React.Fragment>
+                  }
+                  aria-label="access key id help"
+                >
+                  <Button variant="plain" aria-label="access key id help">
+                    <OutlinedQuestionCircleIcon id="popover-icon" />
+                  </Button>
+                </Popover>
+              </div>
               <TextInput
-                value={formatMessage(awsMessages.accessKeyID)}
+                className="pf-c-form-control"
+                value={this.state.uploadSettings["accessKeyID"]}
                 type="password"
-                id="access-key-id-help"
-                key="access-key-id-help"
+                id="access-key-id-input"
+                name="accessKeyID"
                 onChange={this.setUploadSettings}
-                isRequired
               />
-            </FormGroup>
+            </div>
+            <div className="pf-c-form__group">
+              <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
+                <label htmlFor="secret-access-key-input" className="pf-l-flex__item">
+                  <span className="pf-c-form__label-text">
+                    <FormattedMessage defaultMessage="Secret access key" />
+                  </span>
+                  <span className="pf-c-form__label-required" aria-hidden="true">
+                    &#42;
+                  </span>
+                </label>
+                <Popover
+                  id="popover-help"
+                  bodyContent={
+                    <React.Fragment>
+                      <FormattedMessage defaultMessage="You can view the Secret access key only when you create a new Access key ID on the" />
+                      <strong> Identity and Access Management (IAM) </strong>
+                      <FormattedMessage defaultMessage="page in the AWS console." />
+                    </React.Fragment>
+                  }
+                  aria-label="secret access key help"
+                >
+                  <Button variant="plain" aria-label="secret access key help">
+                    <OutlinedQuestionCircleIcon id="popover-icon" />
+                  </Button>
+                </Popover>
+              </div>
+              <TextInput
+                className="pf-c-form-control"
+                value={this.state.uploadSettings["secretAccessKey"]}
+                type="password"
+                id="secret-access-key-input"
+                name="secretAccessKey"
+                onChange={this.setUploadSettings}
+              />
+            </div>
           </Form>
         </React.Fragment>
       )
@@ -561,26 +611,72 @@ class CreateImageUploadModal extends React.Component {
             <FormattedMessage defaultMessage="All fields are required." />
           </Text>
           <Form isHorizontal>
-            <FormGroup fieldId="access-key-id" key="access-key-id">
-              <Tooltip
-                position={TooltipPosition.top}
-                content={
-                  <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id feugiat augue, turpis.</div>
-                }
-              >
-                <OutlinedQuestionCircleIcon />
-              </Tooltip>
+            <div className="pf-c-form__group">
+              <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
+                <label htmlFor="bucket-input" className="pf-l-flex__item">
+                  <span className="pf-c-form__label-text">
+                    <FormattedMessage defaultMessage="Amazon S3 bucket" />
+                  </span>
+                  <span className="pf-c-form__label-required" aria-hidden="true">
+                    &#42;
+                  </span>
+                </label>
+                <Popover
+                  id="bucket-popover"
+                  bodyContent={
+                    <React.Fragment>
+                      <FormattedMessage defaultMessage="
+                      Provide the S3 bucket name to which the image file will be uploaded before being imported into EC2. 
+                      The bucket must already exist in the Region where you want to import your image. You can find a list of buckets on the" />
+                      <strong> S3 buckets </strong>
+                      <FormattedMessage defaultMessage="page in the Amazon S3 storage service in the AWS console." />
+                    </React.Fragment>
+                  }
+                  aria-label="bucket help"
+                >
+                  <Button variant="plain" aria-label="bucket help">
+                    <OutlinedQuestionCircleIcon id="popover-icon" />
+                  </Button>
+                </Popover>
+              </div>
               <TextInput
-                value={formatMessage(awsMessages.accessKeyID, {
-                  name: <b>Identity and Access Management (IAM)</b>
-                })}
-                type="password"
-                id="access-key-id-help"
-                key="access-key-id-help"
+                className="pf-c-form-control"
+                value={this.state.uploadSettings["bucket"]}
+                id="bucket-input"
+                name="bucket"
                 onChange={this.setUploadSettings}
-                isRequired
               />
-            </FormGroup>
+            </div>
+            <div className="pf-c-form__group">
+              <div className="pf-c-form__label pf-m-no-padding-top pf-l-flex pf-m-justify-content-flex-start">
+                <label htmlFor="region-input" className="pf-l-flex__item">
+                  <span className="pf-c-form__label-text">
+                    <FormattedMessage defaultMessage="AWS region" />
+                  </span>
+                  <span className="pf-c-form__label-required" aria-hidden="true">
+                    &#42;
+                  </span>
+                </label>
+                <Popover
+                  id="region-popover"
+                  bodyContent={
+                    <FormattedMessage defaultMessage="Provide the AWS Region where you want to import your image. This must be the same region where the S3 bucket exists." />
+                  }
+                  aria-label="region help"
+                >
+                  <Button variant="plain" aria-label="region help">
+                    <OutlinedQuestionCircleIcon id="popover-icon" />
+                  </Button>
+                </Popover>
+              </div>
+              <TextInput
+                className="pf-c-form-control"
+                value={this.state.uploadSettings["region"]}
+                id="region-input"
+                name="region"
+                onChange={this.setUploadSettings}
+              />
+            </div>
           </Form>
         </React.Fragment>
       )
