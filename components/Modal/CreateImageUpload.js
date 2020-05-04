@@ -72,6 +72,45 @@ const messages = defineMessages({
   }
 });
 
+const ariaLabels = defineMessages({
+  uploadImage: {
+    id: "upload-image-help",
+    defaultMessage: "Upload image help"
+  },
+  processLength: {
+    id: "provess-length-help",
+    defaultMessage: "Process length help"
+  },
+  imageSize: {
+    id: "image-size-help",
+    defaultMessage: "Image size help"
+  },
+  accessKeyID: {
+    id: "access-key-id-help",
+    defaultMessage: "Access key ID help"
+  },
+  secretAccessKey: {
+    id: "secret-access-key-help",
+    defaultMessage: "Secret access key help"
+  },
+  imageName: {
+    id: "image-name-help",
+    defaultMessage: "Image name help"
+  },
+  bucket: {
+    id: "bucket-help",
+    defaultMessage: "S3 Bucket help"
+  },
+  region: {
+    id: "region-help",
+    defaultMessage: "AWS region help"
+  },
+  aws: {
+    id: "aws-help",
+    defaultMessage: "AWS help"
+  }
+});
+
 class CreateImageUpload extends React.Component {
   constructor(props) {
     super(props);
@@ -364,9 +403,9 @@ class CreateImageUploadModal extends React.Component {
                 </p>
               </TextContent>
             }
-            aria-label="Upload image help"
+            aria-label={formatMessage(ariaLabels.uploadImage)}
           >
-            <Button variant="plain" aria-label="Upload image help">
+            <Button variant="plain" aria-label={formatMessage(ariaLabels.uploadImage)}>
               <OutlinedQuestionCircleIcon id="popover-icon" />
             </Button>
           </Popover>
@@ -381,7 +420,6 @@ class CreateImageUploadModal extends React.Component {
               defaultMessage: `Upload to AWS`
             })}
             id="aws-checkbox"
-            aria-labelledby="provider-checkbox"
           />
         </div>
       </div>
@@ -415,9 +453,9 @@ class CreateImageUploadModal extends React.Component {
                 <Popover
                   id="blueprint-name-popover"
                   bodyContent={formatMessage(messages.infotip)}
-                  aria-label="process length help"
+                  aria-label={formatMessage(ariaLabels.processLength)}
                 >
-                  <Button variant="plain" aria-label="process length help">
+                  <Button variant="plain" aria-label={formatMessage(ariaLabels.processLength)}>
                     <OutlinedQuestionCircleIcon id="popover-icon" />
                   </Button>
                 </Popover>
@@ -445,9 +483,9 @@ class CreateImageUploadModal extends React.Component {
                 <Popover
                   id="size-popover"
                   bodyContent={formatMessage(messages.imageSizePopover)}
-                  aria-label="image size help"
+                  aria-label={formatMessage(ariaLabels.imageSize)}
                 >
-                  <Button variant="plain" aria-label="image size help">
+                  <Button variant="plain" aria-label={formatMessage(ariaLabels.imageSize)}>
                     <OutlinedQuestionCircleIcon id="popover-icon" />
                   </Button>
                 </Popover>
@@ -525,9 +563,9 @@ class CreateImageUploadModal extends React.Component {
                       }}
                     />
                   }
-                  aria-label="access key id help"
+                  aria-label={formatMessage(ariaLabels.accessKeyID)}
                 >
-                  <Button variant="plain" aria-label="access key id help">
+                  <Button variant="plain" aria-label={formatMessage(ariaLabels.accessKeyID)}>
                     <OutlinedQuestionCircleIcon id="popover-icon" />
                   </Button>
                 </Popover>
@@ -561,9 +599,9 @@ class CreateImageUploadModal extends React.Component {
                       }}
                     />
                   }
-                  aria-label="secret access key help"
+                  aria-label={formatMessage(ariaLabels.secretAccessKey)}
                 >
-                  <Button variant="plain" aria-label="secret access key help">
+                  <Button variant="plain" aria-label={formatMessage(ariaLabels.secretAccessKey)}>
                     <OutlinedQuestionCircleIcon id="popover-icon" />
                   </Button>
                 </Popover>
@@ -607,9 +645,9 @@ class CreateImageUploadModal extends React.Component {
                       <FormattedMessage defaultMessage="Provide a file name to be used for the image file that will be uploaded." />
                     </React.Fragment>
                   }
-                  aria-label="image name help"
+                  aria-label={formatMessage(ariaLabels.imageName)}
                 >
-                  <Button variant="plain" aria-label="image name help">
+                  <Button variant="plain" aria-label={formatMessage(ariaLabels.imageName)}>
                     <OutlinedQuestionCircleIcon id="popover-icon" />
                   </Button>
                 </Popover>
@@ -649,9 +687,9 @@ class CreateImageUploadModal extends React.Component {
                       />
                     </React.Fragment>
                   }
-                  aria-label="bucket help"
+                  aria-label={formatMessage(ariaLabels.bucket)}
                 >
-                  <Button variant="plain" aria-label="bucket help">
+                  <Button variant="plain" aria-label={formatMessage(ariaLabels.bucket)}>
                     <OutlinedQuestionCircleIcon id="popover-icon" />
                   </Button>
                 </Popover>
@@ -693,9 +731,9 @@ class CreateImageUploadModal extends React.Component {
                       }}
                     />
                   }
-                  aria-label="region help"
+                  aria-label={formatMessage(ariaLabels.region)}
                 >
-                  <Button variant="plain" aria-label="region help">
+                  <Button variant="plain" aria-label={formatMessage(ariaLabels.region)}>
                     <OutlinedQuestionCircleIcon id="popover-icon" />
                   </Button>
                 </Popover>
@@ -764,9 +802,9 @@ class CreateImageUploadModal extends React.Component {
                 </p>
               </TextContent>
             }
-            aria-label="aws help"
+            aria-label={formatMessage(ariaLabels.aws)}
           >
-            <Button variant="plain" aria-label="aws help">
+            <Button variant="plain" aria-label={formatMessage(ariaLabels.aws)}>
               <OutlinedQuestionCircleIcon id="popover-icon" />
             </Button>
           </Popover>
@@ -808,8 +846,11 @@ class CreateImageUploadModal extends React.Component {
           <TextContent>
             <Title className="cc-c-popover__horizontal-group" headingLevel="h3" size="2xl">
               <FormattedMessage defaultMessage="Create and upload image" />
-              <Popover bodyContent={formatMessage(messages.infotip)} aria-label="process length help">
-                <Button variant="plain" aria-label="process length help">
+              <Popover
+                bodyContent={formatMessage(messages.infotip)}
+                aria-label={formatMessage(ariaLabels.processLength)}
+              >
+                <Button variant="plain" aria-label={formatMessage(ariaLabels.processLength)}>
                   <OutlinedQuestionCircleIcon id="popover-icon" />
                 </Button>
               </Popover>
