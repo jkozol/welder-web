@@ -3,20 +3,22 @@ name: Coverity
 on:
   schedule:
     - cron: '0 5 * * *' # Daily at 05:00 UTC
-
+  push:
+    branches:
+      - master
 jobs:
   coverity:
     name: "Test Suite"
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: cockpit-composer
+        working-directory: welder-web
     steps:
 
       - name: Clone repository
         uses: actions/checkout@v2
         with:
-         path: cockpit-composer
+         path: welder-web
 
       - name: Install Dependencies
         run: |

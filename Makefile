@@ -193,7 +193,7 @@ clean-po:
 COVERITY_URL=https://scan.coverity.com/download/linux64
 COVERITY_DIR=cov-analysis-linux64
 COVERITY_TARBALL=coverity-tool.tar.gz
-COVERITY_ANALYSIS=cov-analysis-cockpit-composer.xz
+COVERITY_ANALYSIS=cov-analysis-welder-web.xz
 
 .PHONY: test-coverity
 test-coverity: coverity-submit
@@ -210,7 +210,7 @@ ifeq ($(COVERITY_TOKEN),)
 	@exit 1
 endif
 	@echo "Downloading $(COVERITY_TARBALL) from $(COVERITY_URL)"
-	@wget -q $(COVERITY_URL) --post-data "token=$(COVERITY_TOKEN)&project=cockpit-composer-coverity" -O $(COVERITY_TARBALL)
+	@wget -q $(COVERITY_URL) --post-data "token=$(COVERITY_TOKEN)&project=welder-web" -O $(COVERITY_TARBALL)
 
 
 $(COVERITY_DIR): $(COVERITY_TARBALL)
@@ -244,7 +244,7 @@ endif
 	--form file=@$(COVERITY_ANALYSIS) \
 	--form version="main" \
 	--form description="$(DESCRIPTION)" \
-	https://scan.coverity.com/builds?project=cockpit-composer-coverity
+	https://scan.coverity.com/builds?project=welder-web
 
 .PHONY: coverity-clean
 coverity-clean:
