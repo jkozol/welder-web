@@ -177,3 +177,80 @@ clean-po:
 	rm po/*.po
 
 .PHONY: tag vm check debug-check flake8 devel-install
+
+#
+# Coverity
+#
+# Download the coverity analysis tool and run it on the repository,
+# archive the analysis result and upload it to coverity. The target
+# to do all of that is `coverity-submit`.
+#
+# Individual targets exists for the respective steps.
+#
+# Needs COVERITY_TOKEN and COVERITY_EMAIL to be set for downloading
+# the analysis tool and submitting the final results
+
+COVERITY_URL=https://scan.coverity.com/download/linux64
+COVERITY_DIR=cov-analysis-linux64
+COVERITY_TARBALL=coverity-tool.tar.gz
+COVERITY_ANALYSIS=cov-analysis-cockpit-composer.xz
+
+.PHONY: test-coverity
+test-coverity: coverity-submit
+
+.PHONY: coverity-download
+coverity-download: $(COVERITY_TARBALL)
+
+.PHONY: coverity-check
+coverity-check: $(COVERITY_ANALYSIS)
+
+$(COVERITY_TARBALL):
+ifeq ($(COVERITY_TOKEN),)
+	@echo "COVERITY_TOKEN unset, need it."
+	@exit 1
+endif
+	@echo "Downloading $(COVERITY_TARBALL) from $(COVERITY_URL)"
+	@wget -q $(COVERITY_URL) --post-data "token=$(COVERITY_TOKEN)&project=cockpit-composer-coverity" -O $(COVERITY_TARBALL)
+
+
+$(COVERITY_DIR): $(COVERITY_TARBALL)
+	@echo "Extracting coverity tool"
+	@mkdir $(COVERITY_DIR)
+	@tar xzf $(COVERITY_TARBALL) --strip 1 -C $(COVERITY_DIR)
+
+$(COVERITY_ANALYSIS): $(COVERITY_DIR)
+	$(PWD)/$(COVERITY_DIR)/bin/cov-build \
+		--dir cov-int \
+		--no-command \
+		--fs-capture-search ./ \
+		--fs-capture-search-exclude-regex "$(COVERITY_DIR)"
+	@echo "Compressing analysis results"
+	@tar caf $(COVERITY_ANALYSIS) cov-int
+
+coverity-submit: $(COVERITY_ANALYSIS)
+ifeq ($(COVERITY_TOKEN),)
+	@echo "COVERITY_TOKEN unset, need it."
+	@exit 1
+endif
+ifeq ($(COVERITY_EMAIL),)
+	@echo "COVERITY_EMAIL unset, need it."
+	@exit 1
+endif
+
+	DESCRIPTION=$(shell git describe)
+	@echo "Submitting $(COVERITY_ANALYSIS)"
+	@curl --form token=$(COVERITY_TOKEN) \
+	--form email=$(COVERITY_EMAIL) \
+	--form file=@$(COVERITY_ANALYSIS) \
+	--form version="main" \
+	--form description="$(DESCRIPTION)" \
+	https://scan.coverity.com/builds?project=cockpit-composer-coverity
+
+.PHONY: coverity-clean
+coverity-clean:
+	rm -rf cov-int
+	rm -rf $(COVERITY_DIR)
+
+.PHONY: coverity-clean-all
+coverity-clean-all: coverity-clean
+	rm -rf $(COVERITY_TARBALL)
