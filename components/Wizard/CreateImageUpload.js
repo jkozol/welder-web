@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Wizard, WizardContextConsumer, WizardFooter } from "@patternfly/react-core";
+import { Button, Popover, Split, SplitItem, Wizard, WizardContextConsumer, WizardFooter } from "@patternfly/react-core";
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { defineMessages, FormattedMessage, injectIntl, intlShape } from "react-intl";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -17,6 +18,9 @@ import ImageStep from "./ImageStep";
 const messages = defineMessages({
   title: {
     defaultMessage: "Create image",
+  },
+  titleInfoTip: {
+    defaultMessage: "This process can take a while. Images are built in the order they are started.",
   },
 });
 
@@ -416,6 +420,21 @@ class CreateImageUploadModal extends React.Component {
       ...(showReviewStep ? [reviewStep] : []),
     ];
 
+    const title = (
+      <Split>
+        <SplitItem isFilled className="pf-c-title pf-m-3xl">
+          {formatMessage(messages.title)}
+        </SplitItem>
+        <SplitItem>
+          <Popover bodyContent={formatMessage(messages.titleInfoTip)} aria-label="Package set help">
+            <Button variant="plain" className="cc-c-modal__help" aria-label="Create image help">
+              <OutlinedQuestionCircleIcon />
+            </Button>
+          </Popover>
+        </SplitItem>
+      </Split>
+    );
+
     const createImageUploadFooter = (
       <WizardFooter>
         <WizardContextConsumer>
@@ -467,7 +486,7 @@ class CreateImageUploadModal extends React.Component {
           isCompactNav
           onClose={this.props.close}
           footer={createImageUploadFooter}
-          title={formatMessage(messages.title)}
+          title={title}
           steps={steps}
         />
       </>

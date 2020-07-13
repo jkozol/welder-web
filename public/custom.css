@@ -755,6 +755,13 @@ body {
   margin-bottom: var(--pf-global--gutter);
 }
 
+.pf-c-wizard__header .cc-c-modal__help {
+  font-size: var(--pf-c-wizard__close--FontSize);
+  margin-top: calc(
+    var(--pf-c-wizard__close--Top) - var(--pf-c-wizard__header--PaddingTop)
+  );
+}
+
 /* horizontal group with popover justification fix*/
 .cc-c-popover__horizontal-group {
   display: flex;
