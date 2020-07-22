@@ -144,6 +144,7 @@ class BlueprintPage extends React.Component {
     this.handleDeleteUser = this.handleDeleteUser.bind(this);
     this.downloadUrl = this.downloadUrl.bind(this);
     this.imageTypeToLabel = this.imageTypeToLabel.bind(this);
+    this.uploadProviderToLabel = this.uploadProviderToLabel.bind(this);
   }
 
   componentDidMount() {
@@ -297,6 +298,14 @@ class BlueprintPage extends React.Component {
       "hyper-v": "Hyper-V Virtual Machine Disk (.vhdx)",
     };
     return imageTypeLabels[imageType];
+  }
+
+  uploadProviderToLabel(uploadType) {
+    const uploadTypeLabels = {
+      aws: "AWS",
+      azure: "Azure",
+    };
+    return uploadTypeLabels[uploadType];
   }
 
   render() {
@@ -582,6 +591,7 @@ class BlueprintPage extends React.Component {
                       blueprint={this.props.route.params.blueprint}
                       listItem={compose}
                       imageTypeToLabel={this.imageTypeToLabel}
+                      uploadProviderToLabel={this.uploadProviderToLabel}
                       downloadUrl={this.downloadUrl(compose)}
                       key={compose.id}
                     />

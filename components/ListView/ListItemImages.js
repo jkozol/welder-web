@@ -281,7 +281,11 @@ class ListItemImages extends React.Component {
       uploadsSection = (
         <ImagesDataList ariaLabel={formatMessage(messages.imageUploads)}>
           {listItem.uploads.map((upload) => (
-            <ListItemUploads upload={upload} key={upload.uuid} />
+            <ListItemUploads
+              upload={upload}
+              key={upload.uuid}
+              uploadProviderToLabel={this.props.uploadProviderToLabel}
+            />
           ))}
         </ImagesDataList>
       );
@@ -385,6 +389,7 @@ ListItemImages.propTypes = {
     uploads: PropTypes.arrayOf(PropTypes.object),
   }),
   imageTypeToLabel: PropTypes.func,
+  uploadProviderToLabel: PropTypes.func,
   blueprint: PropTypes.string,
   deletingCompose: PropTypes.func,
   cancellingCompose: PropTypes.func,
@@ -399,6 +404,7 @@ ListItemImages.propTypes = {
 ListItemImages.defaultProps = {
   listItem: {},
   imageTypeToLabel() {},
+  uploadProviderToLabel() {},
   blueprint: "",
   deletingCompose() {},
   cancellingCompose() {},

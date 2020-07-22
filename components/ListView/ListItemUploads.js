@@ -122,7 +122,7 @@ class ListItemUploads extends React.PureComponent {
                 )}
                 <div className="pf-l-flex__item">
                   <span>{formatMessage(messages.uploadType)}</span>{" "}
-                  <strong id={`${upload.uuid}-type`}>{upload.provider_name}</strong>
+                  <strong id={`${upload.uuid}-type`}>{this.props.uploadProviderToLabel(upload.provider_name)}</strong>
                 </div>
                 <div className="pf-l-flex__item">
                   <span>{formatMessage(messages.timeStarted)}</span> <strong>{formattedTime}</strong>
@@ -159,11 +159,13 @@ ListItemUploads.propTypes = {
     status: PropTypes.string,
     uuid: PropTypes.string,
   }),
+  uploadProviderToLabel: PropTypes.func,
   intl: intlShape.isRequired,
 };
 
 ListItemUploads.defaultProps = {
   upload: {},
+  uploadProviderToLabel() {},
 };
 
 export default injectIntl(ListItemUploads);
