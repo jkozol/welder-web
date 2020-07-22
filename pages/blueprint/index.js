@@ -143,6 +143,7 @@ class BlueprintPage extends React.Component {
     this.handlePostUser = this.handlePostUser.bind(this);
     this.handleDeleteUser = this.handleDeleteUser.bind(this);
     this.downloadUrl = this.downloadUrl.bind(this);
+    this.imageTypeToLabel = this.imageTypeToLabel.bind(this);
   }
 
   componentDidMount() {
@@ -276,6 +277,26 @@ class BlueprintPage extends React.Component {
     );
 
     return `/cockpit/channel/${cockpit.transport.csrf_token}?${query}`;
+  }
+
+  imageTypeToLabel(imageType) {
+    const imageTypeLabels = {
+      ami: "Amazon Machine Image Disk (.ami)",
+      "ext4-filesystem": "Ext4 File System Image (.img)",
+      "fedora-iot-commit": "Fedora IoT Commit (.tar)",
+      "live-iso": "Live Bootable ISO (.iso)",
+      "partitioned-disk": "Raw Partitioned Disk Image (.img)",
+      qcow2: "QEMU QCOW2 Image (.qcow2)",
+      openstack: "OpenStack (.qcow2)",
+      "rhel-edge-commit": "RHEL for Edge Commit (.tar)",
+      tar: "TAR Archive (.tar)",
+      vhd: "Azure Disk Image (.vhd)",
+      vmdk: "VMware Virtual Machine Disk (.vmdk)",
+      alibaba: "Alibaba Machine Image (.qcow2)",
+      google: "Google Compute Engine Image (.tar.gz)",
+      "hyper-v": "Hyper-V Virtual Machine Disk (.vhdx)",
+    };
+    return imageTypeLabels[imageType];
   }
 
   render() {
@@ -560,6 +581,7 @@ class BlueprintPage extends React.Component {
                     <ListItemImages
                       blueprint={this.props.route.params.blueprint}
                       listItem={compose}
+                      imageTypeToLabel={this.imageTypeToLabel}
                       downloadUrl={this.downloadUrl(compose)}
                       key={compose.id}
                     />

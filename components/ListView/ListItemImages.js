@@ -311,7 +311,9 @@ class ListItemImages extends React.Component {
                 </div>
                 <div className="pf-l-flex__item">
                   <span>{formatMessage(messages.imageType)} </span>
-                  <strong data-image-type={listItem.compose_type}>{listItem.compose_type}</strong>
+                  <strong data-image-type={listItem.compose_type}>
+                    {this.props.imageTypeToLabel(listItem.compose_type)}
+                  </strong>
                 </div>
                 <div className="pf-l-flex__item">
                   <span>{formatMessage(messages.imageCreated)}</span> <strong>{formattedTime}</strong>
@@ -382,6 +384,7 @@ ListItemImages.propTypes = {
     version: PropTypes.string,
     uploads: PropTypes.arrayOf(PropTypes.object),
   }),
+  imageTypeToLabel: PropTypes.func,
   blueprint: PropTypes.string,
   deletingCompose: PropTypes.func,
   cancellingCompose: PropTypes.func,
@@ -395,6 +398,7 @@ ListItemImages.propTypes = {
 
 ListItemImages.defaultProps = {
   listItem: {},
+  imageTypeToLabel() {},
   blueprint: "",
   deletingCompose() {},
   cancellingCompose() {},
