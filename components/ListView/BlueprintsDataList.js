@@ -46,7 +46,11 @@ class BlueprintsDataList extends React.PureComponent {
                 <Link to={`/edit/${blueprint.name}`} className="btn btn-default">
                   <FormattedMessage defaultMessage="Edit Packages" />
                 </Link>
-                <CreateImageUpload blueprint={blueprint} layout={layout} />
+                <CreateImageUpload
+                  blueprint={blueprint}
+                  imageTypeToLabel={this.props.imageTypeToLabel}
+                  layout={layout}
+                />
                 <div className="dropdown pull-right dropdown-kebab-pf">
                   <button
                     className="btn btn-link dropdown-toggle"
@@ -79,6 +83,7 @@ class BlueprintsDataList extends React.PureComponent {
 
 BlueprintsDataList.propTypes = {
   blueprints: PropTypes.arrayOf(PropTypes.object),
+  imageTypeToLabel: PropTypes.func,
   layout: PropTypes.shape({
     setNotifications: PropTypes.func,
   }),
@@ -88,6 +93,7 @@ BlueprintsDataList.propTypes = {
 
 BlueprintsDataList.defaultProps = {
   blueprints: [],
+  imageTypeToLabel() {},
   layout: {},
   ariaLabel: "",
 };

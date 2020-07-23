@@ -328,7 +328,12 @@ class ImageStep extends React.PureComponent {
             <FormSelect value={imageType} id="image-type" onChange={setImageType}>
               <FormSelectOption isDisabled key="default" value="" label={formatMessage(messages.selectOne)} />
               {imageTypes.map((type) => (
-                <FormSelectOption isDisabled={!type.enabled} key={type.name} value={type.name} label={type.label} />
+                <FormSelectOption
+                  isDisabled={!type.enabled}
+                  key={type.name}
+                  value={type.name}
+                  label={this.props.imageTypeToLabel(type.name)}
+                />
               ))}
             </FormSelect>
           </FormGroup>
@@ -407,6 +412,7 @@ ImageStep.propTypes = {
   intl: intlShape.isRequired,
   imageType: PropTypes.string,
   imageTypes: PropTypes.arrayOf(PropTypes.object),
+  imageTypeToLabel: PropTypes.func,
   imageSize: PropTypes.number,
   isPendingChange: PropTypes.func,
   isValidImageSize: PropTypes.func,
@@ -426,6 +432,7 @@ ImageStep.defaultProps = {
   handleUploadService() {},
   imageType: "",
   imageTypes: [],
+  imageTypeToLabel() {},
   imageSize: undefined,
   isPendingChange() {},
   isValidImageSize() {},

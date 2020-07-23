@@ -20,6 +20,7 @@ import {
   blueprintsFilterClearValues,
 } from "../../core/actions/filter";
 import { makeGetSortedBlueprints, makeGetFilteredBlueprints } from "../../core/selectors";
+import { imageTypeToLabel } from "../../data/typeLabels";
 
 const messages = defineMessages({
   blueprintsTitle: {
@@ -108,6 +109,7 @@ class BlueprintsPage extends React.Component {
           (blueprints.length > 0 && (
             <BlueprintsDataList
               blueprints={blueprints.map((blueprint) => blueprint.present)}
+              imageTypeToLabel={imageTypeToLabel}
               setNotifications={this.setNotifications}
               layout={this.layout}
               ariaLabel={formatMessage(messages.blueprintsTitle)}

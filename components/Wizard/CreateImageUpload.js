@@ -331,6 +331,7 @@ class CreateImageUploadModal extends React.Component {
           imageSize={this.state.imageSize}
           imageType={this.state.imageType}
           imageTypes={this.props.imageTypes}
+          imageTypeToLabel={this.props.imageTypeToLabel}
           isPendingChange={this.isPendingChange}
           isValidImageSize={this.isValidImageSize}
           minImageSize={this.state.minImageSize}
@@ -400,6 +401,7 @@ class CreateImageUploadModal extends React.Component {
           imageSize={this.state.imageSize}
           imageType={this.state.imageType}
           imageTypes={this.props.imageTypes}
+          imageTypeToLabel={this.props.imageTypeToLabel}
           minImageSize={this.state.minImageSize}
           maxImageSize={this.state.maxImageSize}
           uploadService={this.state.uploadService}
@@ -516,6 +518,7 @@ CreateImageUploadModal.propTypes = {
   fetchingQueue: PropTypes.func,
   clearQueue: PropTypes.func,
   imageTypes: PropTypes.arrayOf(PropTypes.object),
+  imageTypeToLabel: PropTypes.func,
   fetchingComposeTypes: PropTypes.func,
   setBlueprint: PropTypes.func,
   intl: intlShape.isRequired,
@@ -533,6 +536,7 @@ CreateImageUploadModal.defaultProps = {
   fetchingQueue() {},
   clearQueue() {},
   imageTypes: [],
+  imageTypeToLabel() {},
   fetchingComposeTypes() {},
   setBlueprint() {},
   startCompose() {},

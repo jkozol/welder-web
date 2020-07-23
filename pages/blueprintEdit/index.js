@@ -57,6 +57,7 @@ import {
   makeGetSelectedInputs,
   makeGetSelectedDeps,
 } from "../../core/selectors";
+import { imageTypeToLabel } from "../../data/typeLabels";
 import "./index.css";
 
 const messages = defineMessages({
@@ -460,7 +461,7 @@ class EditBlueprintPage extends React.Component {
                 </li>
               )}
               <li className="list__subgroup-item--first">
-                <CreateImageUpload blueprint={blueprint} layout={this.layout} />
+                <CreateImageUpload blueprint={blueprint} imageTypeToLabel={imageTypeToLabel} layout={this.layout} />
               </li>
               <li>
                 <div className="dropdown dropdown-kebab-pf">
