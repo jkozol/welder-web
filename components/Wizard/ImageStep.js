@@ -414,16 +414,28 @@ class ImageStep extends React.PureComponent {
             onChange={this.handleOSTreeRef}
             validated={ostreeRefValidated}
           />
-          {ostreeRefValidated === "default" && imageType === "rhel-edge-commit" && (
-            <p className="pf-c-form__helper-text" id="ostree-ref-input-helper-default" aria-live="polite">
-              <FormattedMessage
-                defaultMessage="rhel/8/{arch}/edge is the default, where {arch} is determined by the host machine"
-                values={{
-                  arch: <em>$ARCH</em>,
-                }}
-              />
-            </p>
-          )}
+          {ostreeRefValidated === "default" &&
+            ((imageType === "rhel-edge-commit" && (
+              <p className="pf-c-form__helper-text" id="ostree-ref-input-helper-default" aria-live="polite">
+                <FormattedMessage
+                  defaultMessage="rhel/8/{arch}/edge is the default, where {arch} is determined by the host machine"
+                  values={{
+                    arch: <em>$ARCH</em>,
+                  }}
+                />
+              </p>
+            )) ||
+              (imageType === "fedora-iot-commit" && (
+                <p className="pf-c-form__helper-text" id="ostree-ref-input-helper-default" aria-live="polite">
+                  <FormattedMessage
+                    defaultMessage="fedora/{release}/{arch}/edge is the default, where {release} and {arch} are determined by the host machine"
+                    values={{
+                      arch: <em>$ARCH</em>,
+                      release: <em>$RELEASE</em>,
+                    }}
+                  />
+                </p>
+              )))}
         </FormGroup>
       </>
     );
