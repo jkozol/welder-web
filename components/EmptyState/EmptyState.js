@@ -16,7 +16,7 @@ class EmptyState extends React.PureComponent {
           {title}
         </Title>
         <EmptyStateBody>{message}</EmptyStateBody>
-        {children}
+        {title === "test" ? children : null}
       </EmptyStatePF4>
     );
   }
